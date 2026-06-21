@@ -8,7 +8,7 @@ import { DemoRoleSwitcher } from "@/features/dashboard/components/demo-role-swit
 
 interface AppSidebarProps {
   role: AppRole;
-  activeItem?: "overview" | "customers";
+  activeItem?: "overview" | "customers" | "visits";
 }
 
 const roleProfiles: Record<
@@ -66,8 +66,14 @@ export function AppSidebar({ role, activeItem = "overview" }: AppSidebarProps) {
           {navigation.map((item) => {
             const isCustomerItem =
               item.label === "Customers" || item.label === "My Customers";
+            const isVisitItem =
+              item.label === "Visits" || item.label === "Today's Visits";
             const isActive =
-              activeItem === "customers" ? isCustomerItem : item.active;
+              activeItem === "customers"
+                ? isCustomerItem
+                : activeItem === "visits"
+                  ? isVisitItem
+                  : item.active;
             const itemClassName = `flex min-h-10 items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium lg:min-h-11 ${
               isActive
                 ? "bg-blue-600 text-white shadow-sm shadow-blue-950/40"
@@ -93,11 +99,11 @@ export function AppSidebar({ role, activeItem = "overview" }: AppSidebarProps) {
 
             return (
               <li key={item.label}>
-                {isCustomerItem ? (
+                {isCustomerItem || isVisitItem ? (
                   <Link
-                    href={`/customers?role=${role}`}
+                    href={`${isCustomerItem ? "/customers" : "/visits"}?role=${role}`}
                     aria-current={isActive ? "page" : undefined}
-                    aria-label={`Open ${item.label} demo directory`}
+                    aria-label={`Open ${item.label} demo ${isCustomerItem ? "directory" : "planner"}`}
                     className={`${itemClassName} transition-colors hover:bg-white/5 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-300`}
                   >
                     {itemContent}
