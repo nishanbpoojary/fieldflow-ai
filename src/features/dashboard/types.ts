@@ -85,3 +85,20 @@ export interface PersonalPerformance {
   completionPercentage: number;
   summary: string;
 }
+
+export interface VisitComparisonChartPoint {
+  label: string;
+  plannedVisits: number;
+  completedVisits: number;
+}
+
+export interface MonthlyCompletionChartPoint {
+  month: string;
+  completionPercentage: number;
+}
+
+export interface CustomerStatusChartPoint {
+  status: string;
+  count: number;
+  fill: string;
+}

@@ -1,9 +1,12 @@
 import type {
   DashboardKpi,
   DashboardNavigationItem,
+  CustomerStatusChartPoint,
   ManagerPriority,
+  MonthlyCompletionChartPoint,
   OverdueFollowUp,
   TeamPerformanceMember,
+  VisitComparisonChartPoint,
 } from "@/features/dashboard/types";
 
 export const managerNavigation: DashboardNavigationItem[] = [
@@ -136,6 +139,36 @@ export const teamPerformance: TeamPerformanceMember[] = [
     completedVisits: 6,
     completionPercentage: 67,
   },
+];
+
+export const executiveVisitChartData: VisitComparisonChartPoint[] =
+  teamPerformance.map((member) => ({
+    label: member.name.split(" ")[0],
+    plannedVisits: member.plannedVisits,
+    completedVisits: member.completedVisits,
+  }));
+
+export const territoryVisitChartData: VisitComparisonChartPoint[] =
+  teamPerformance.map((member) => ({
+    label: member.territory,
+    plannedVisits: member.plannedVisits,
+    completedVisits: member.completedVisits,
+  }));
+
+export const monthlyCompletionChartData: MonthlyCompletionChartPoint[] = [
+  { month: "Jan", completionPercentage: 61 },
+  { month: "Feb", completionPercentage: 65 },
+  { month: "Mar", completionPercentage: 68 },
+  { month: "Apr", completionPercentage: 72 },
+  { month: "May", completionPercentage: 77 },
+  { month: "Jun", completionPercentage: 74 },
+];
+
+export const customerStatusChartData: CustomerStatusChartPoint[] = [
+  { status: "Active", count: 82, fill: "#2563eb" },
+  { status: "Follow-up due", count: 28, fill: "#f59e0b" },
+  { status: "New", count: 21, fill: "#10b981" },
+  { status: "Dormant", count: 17, fill: "#94a3b8" },
 ];
 
 export const managerPriorities: ManagerPriority[] = [
