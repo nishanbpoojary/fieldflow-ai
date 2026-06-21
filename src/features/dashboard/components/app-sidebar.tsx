@@ -8,7 +8,7 @@ import { DemoRoleSwitcher } from "@/features/dashboard/components/demo-role-swit
 
 interface AppSidebarProps {
   role: AppRole;
-  activeItem?: "overview" | "customers" | "visits" | "follow-ups";
+  activeItem?: "overview" | "customers" | "visits" | "follow-ups" | "tasks";
 }
 
 const roleProfiles: Record<
@@ -69,6 +69,7 @@ export function AppSidebar({ role, activeItem = "overview" }: AppSidebarProps) {
             const isVisitItem =
               item.label === "Visits" || item.label === "Today's Visits";
             const isFollowUpItem = item.label === "Follow-ups";
+            const isTaskItem = item.label === "Tasks";
             const isActive =
               activeItem === "customers"
                 ? isCustomerItem
@@ -76,17 +77,23 @@ export function AppSidebar({ role, activeItem = "overview" }: AppSidebarProps) {
                   ? isVisitItem
                   : activeItem === "follow-ups"
                     ? isFollowUpItem
-                  : item.active;
+                    : activeItem === "tasks"
+                      ? isTaskItem
+                      : item.active;
             const itemHref = isCustomerItem
               ? `/customers?role=${role}`
               : isVisitItem
                 ? `/visits?role=${role}`
-                : `/follow-ups?role=${role}`;
+                : isFollowUpItem
+                  ? `/follow-ups?role=${role}`
+                  : `/tasks?role=${role}`;
             const itemDestination = isCustomerItem
               ? "directory"
               : isVisitItem
                 ? "planner"
-                : "tracker";
+                : isFollowUpItem
+                  ? "tracker"
+                  : "board";
             const itemClassName = `flex min-h-10 items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium lg:min-h-11 ${
               isActive
                 ? "bg-blue-600 text-white shadow-sm shadow-blue-950/40"
@@ -112,7 +119,7 @@ export function AppSidebar({ role, activeItem = "overview" }: AppSidebarProps) {
 
             return (
               <li key={item.label}>
-                {isCustomerItem || isVisitItem || isFollowUpItem ? (
+                {isCustomerItem || isVisitItem || isFollowUpItem || isTaskItem ? (
                   <Link
                     href={itemHref}
                     aria-current={isActive ? "page" : undefined}
