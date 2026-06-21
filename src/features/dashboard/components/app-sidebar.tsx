@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   managerNavigation,
   salesExecutiveNavigation,
@@ -7,6 +8,7 @@ import { DemoRoleSwitcher } from "@/features/dashboard/components/demo-role-swit
 
 interface AppSidebarProps {
   role: AppRole;
+  activeItem?: "overview" | "customers";
 }
 
 const roleProfiles: Record<
@@ -27,7 +29,7 @@ const roleProfiles: Record<
   },
 };
 
-export function AppSidebar({ role }: AppSidebarProps) {
+export function AppSidebar({ role, activeItem = "overview" }: AppSidebarProps) {
   const profile = roleProfiles[role];
   const navigation =
     role === "manager" ? managerNavigation : salesExecutiveNavigation;
@@ -61,20 +63,22 @@ export function AppSidebar({ role }: AppSidebarProps) {
           Workspace
         </p>
         <ul className="grid grid-cols-2 gap-1.5 sm:grid-cols-3 md:grid-cols-4 lg:block lg:space-y-1.5">
-          {navigation.map((item) => (
-            <li key={item.label}>
-              <span
-                aria-current={item.active ? "page" : undefined}
-                className={`flex min-h-10 items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium lg:min-h-11 ${
-                  item.active
-                    ? "bg-blue-600 text-white shadow-sm shadow-blue-950/40"
-                    : "text-slate-400"
-                }`}
-              >
+          {navigation.map((item) => {
+            const isCustomerItem =
+              item.label === "Customers" || item.label === "My Customers";
+            const isActive =
+              activeItem === "customers" ? isCustomerItem : item.active;
+            const itemClassName = `flex min-h-10 items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium lg:min-h-11 ${
+              isActive
+                ? "bg-blue-600 text-white shadow-sm shadow-blue-950/40"
+                : "text-slate-400"
+            }`;
+            const itemContent = (
+              <>
                 <span
                   aria-hidden="true"
                   className={`grid size-6 shrink-0 place-items-center rounded-md text-[10px] font-bold ${
-                    item.active
+                    isActive
                       ? "bg-white/15 text-white"
                       : "bg-white/5 text-slate-500"
                   }`}
@@ -84,9 +88,31 @@ export function AppSidebar({ role }: AppSidebarProps) {
                 <span className="min-w-0 whitespace-normal leading-4 lg:truncate lg:whitespace-nowrap">
                   {item.label}
                 </span>
-              </span>
-            </li>
-          ))}
+              </>
+            );
+
+            return (
+              <li key={item.label}>
+                {isCustomerItem ? (
+                  <Link
+                    href={`/customers?role=${role}`}
+                    aria-current={isActive ? "page" : undefined}
+                    aria-label={`Open ${item.label} demo directory`}
+                    className={`${itemClassName} transition-colors hover:bg-white/5 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-300`}
+                  >
+                    {itemContent}
+                  </Link>
+                ) : (
+                  <span
+                    aria-current={isActive ? "page" : undefined}
+                    className={itemClassName}
+                  >
+                    {itemContent}
+                  </span>
+                )}
+              </li>
+            );
+          })}
         </ul>
       </nav>
 
