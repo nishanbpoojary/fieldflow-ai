@@ -1,10 +1,16 @@
 import { AppSidebar } from "@/features/dashboard/components/app-sidebar";
-import { ChartPlaceholder } from "@/features/dashboard/components/chart-placeholder";
 import { KpiCard } from "@/features/dashboard/components/kpi-card";
+import { ManagerAnalyticsCharts } from "@/features/dashboard/components/manager-analytics-charts";
 import { ManagerPriorities } from "@/features/dashboard/components/manager-priorities";
 import { OverdueFollowUps } from "@/features/dashboard/components/overdue-follow-ups";
 import { TeamPerformance } from "@/features/dashboard/components/team-performance";
-import { dashboardKpis } from "@/features/dashboard/data/demo-dashboard";
+import {
+  customerStatusChartData,
+  dashboardKpis,
+  executiveVisitChartData,
+  monthlyCompletionChartData,
+  territoryVisitChartData,
+} from "@/features/dashboard/data/demo-dashboard";
 
 export function ManagerDashboard() {
   return (
@@ -93,9 +99,15 @@ export function ManagerDashboard() {
             </div>
             <div className="space-y-6">
               <ManagerPriorities />
-              <ChartPlaceholder />
             </div>
           </div>
+
+          <ManagerAnalyticsCharts
+            completionData={monthlyCompletionChartData}
+            customerStatusData={customerStatusChartData}
+            executiveData={executiveVisitChartData}
+            territoryData={territoryVisitChartData}
+          />
 
           <footer className="flex flex-col gap-1 border-t border-slate-200 py-2 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
             <p>FieldFlow AI manager workspace</p>
