@@ -1,15 +1,16 @@
 import { AppSidebar } from "@/features/dashboard/components/app-sidebar";
-import { ChartPlaceholder } from "@/features/dashboard/components/chart-placeholder";
+import { AssignedCustomers } from "@/features/dashboard/components/assigned-customers";
 import { KpiCard } from "@/features/dashboard/components/kpi-card";
-import { ManagerPriorities } from "@/features/dashboard/components/manager-priorities";
-import { OverdueFollowUps } from "@/features/dashboard/components/overdue-follow-ups";
-import { TeamPerformance } from "@/features/dashboard/components/team-performance";
-import { dashboardKpis } from "@/features/dashboard/data/demo-dashboard";
+import { PersonalPerformance } from "@/features/dashboard/components/personal-performance";
+import { SalesFocusPanel } from "@/features/dashboard/components/sales-focus-panel";
+import { TodaysVisits } from "@/features/dashboard/components/todays-visits";
+import { UpcomingTasks } from "@/features/dashboard/components/upcoming-tasks";
+import { salesExecutiveKpis } from "@/features/dashboard/data/sales-executive-dashboard";
 
-export function ManagerDashboard() {
+export function SalesExecutiveDashboard() {
   return (
     <div className="min-h-screen bg-slate-100 lg:flex">
-      <AppSidebar role="manager" />
+      <AppSidebar role="sales_executive" />
 
       <main id="overview" className="min-w-0 flex-1">
         <header className="border-b border-slate-200 bg-white px-4 py-5 sm:px-6 lg:px-8">
@@ -17,14 +18,14 @@ export function ManagerDashboard() {
             <div>
               <div className="flex flex-wrap items-center gap-2.5">
                 <h1 className="text-xl font-semibold tracking-tight text-slate-950 sm:text-2xl">
-                  Manager Workspace
+                  Sales Executive Workspace
                 </h1>
                 <span className="rounded-full border border-blue-200 bg-blue-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-blue-700">
                   Demo data
                 </span>
               </div>
               <p className="mt-1 text-sm text-slate-500">
-                Regional sales operations overview
+                Personal field activity overview
               </p>
             </div>
             <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 sm:text-right">
@@ -49,56 +50,58 @@ export function ManagerDashboard() {
             />
             <div className="relative max-w-3xl">
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-blue-300">
-                Weekly command center
+                Today&apos;s field plan
               </p>
               <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
-                Welcome back, Avery.
+                Good morning, Maya.
               </h2>
               <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300 sm:text-base sm:leading-7">
-                Your team has completed 31 of 42 planned visits. Focus today on
-                nine overdue follow-ups and the remaining visit gap across West
-                Ridge and South District.
+                Two of your five visits are complete. Your next priority is Summit
+                Drive Works at 1:30 PM, followed by three customer actions due
+                today.
               </p>
             </div>
           </section>
 
-          <section aria-labelledby="kpi-overview-title">
+          <section aria-labelledby="sales-kpi-title">
             <div className="mb-4 flex items-end justify-between gap-4">
               <div>
                 <h2
-                  id="kpi-overview-title"
+                  id="sales-kpi-title"
                   className="text-lg font-semibold tracking-tight text-slate-950"
                 >
-                  Performance snapshot
+                  My activity snapshot
                 </h2>
                 <p className="mt-1 text-sm text-slate-500">
-                  A focused view of this week&apos;s field activity.
+                  Your current customer, visit, and follow-up workload.
                 </p>
               </div>
               <p className="hidden text-xs font-medium text-slate-400 sm:block">
-                Updated for demo presentation
+                Synthetic demo activity
               </p>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-              {dashboardKpis.map((kpi) => (
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
+              {salesExecutiveKpis.map((kpi) => (
                 <KpiCard key={kpi.id} kpi={kpi} />
               ))}
             </div>
           </section>
 
-          <div className="grid gap-6 xl:grid-cols-[minmax(0,1.55fr)_minmax(340px,0.85fr)]">
+          <TodaysVisits />
+
+          <div className="grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(340px,.85fr)]">
             <div className="space-y-6">
-              <OverdueFollowUps />
-              <TeamPerformance />
+              <AssignedCustomers />
+              <PersonalPerformance />
             </div>
             <div className="space-y-6">
-              <ManagerPriorities />
-              <ChartPlaceholder />
+              <UpcomingTasks />
+              <SalesFocusPanel />
             </div>
           </div>
 
           <footer className="flex flex-col gap-1 border-t border-slate-200 py-2 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
-            <p>FieldFlow AI manager workspace</p>
+            <p>FieldFlow AI sales executive workspace</p>
             <p>All names and operational records are synthetic demo data.</p>
           </footer>
         </div>
