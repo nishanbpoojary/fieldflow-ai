@@ -5,12 +5,14 @@ import {
   BarChart,
   CartesianGrid,
   Legend,
-  ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
-import { ChartCard } from "@/features/dashboard/components/charts/chart-card";
+import {
+  ChartCard,
+  ChartViewport,
+} from "@/features/dashboard/components/charts/chart-card";
 import type { VisitComparisonChartPoint } from "@/features/dashboard/types";
 
 interface ExecutiveVisitsChartProps {
@@ -23,12 +25,7 @@ export function ExecutiveVisitsChart({ data }: ExecutiveVisitsChartProps) {
       title="Visits by executive"
       description="Planned and completed visits for each sales executive this week."
     >
-      <div
-        aria-label="Bar chart comparing planned and completed visits for Maya, Arjun, Leena, and Daniel"
-        className="h-72 w-full min-w-0"
-        role="img"
-      >
-        <ResponsiveContainer width="100%" height="100%">
+      <ChartViewport accessibleLabel="Bar chart comparing planned and completed visits for Maya, Arjun, Leena, and Daniel">
           <BarChart
             accessibilityLayer
             data={data}
@@ -62,8 +59,7 @@ export function ExecutiveVisitsChart({ data }: ExecutiveVisitsChartProps) {
               radius={[4, 4, 0, 0]}
             />
           </BarChart>
-        </ResponsiveContainer>
-      </div>
+      </ChartViewport>
     </ChartCard>
   );
 }

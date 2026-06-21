@@ -4,10 +4,12 @@ import {
   Legend,
   Pie,
   PieChart,
-  ResponsiveContainer,
   Tooltip,
 } from "recharts";
-import { ChartCard } from "@/features/dashboard/components/charts/chart-card";
+import {
+  ChartCard,
+  ChartViewport,
+} from "@/features/dashboard/components/charts/chart-card";
 import type { CustomerStatusChartPoint } from "@/features/dashboard/types";
 
 interface CustomerStatusChartProps {
@@ -20,12 +22,7 @@ export function CustomerStatusChart({ data }: CustomerStatusChartProps) {
       title="Customer status breakdown"
       description="Distribution of all 148 assigned customer accounts by status."
     >
-      <div
-        aria-label="Donut chart showing 82 active, 28 follow-up due, 21 new, and 17 dormant customers"
-        className="h-72 w-full min-w-0"
-        role="img"
-      >
-        <ResponsiveContainer width="100%" height="100%">
+      <ChartViewport accessibleLabel="Donut chart showing 82 active, 28 follow-up due, 21 new, and 17 dormant customers">
           <PieChart accessibilityLayer>
             <Pie
               data={data}
@@ -40,8 +37,7 @@ export function CustomerStatusChart({ data }: CustomerStatusChartProps) {
             <Tooltip />
             <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 12 }} />
           </PieChart>
-        </ResponsiveContainer>
-      </div>
+      </ChartViewport>
     </ChartCard>
   );
 }

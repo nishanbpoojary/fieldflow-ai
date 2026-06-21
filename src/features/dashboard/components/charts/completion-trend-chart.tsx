@@ -5,12 +5,14 @@ import {
   Legend,
   Line,
   LineChart,
-  ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
-import { ChartCard } from "@/features/dashboard/components/charts/chart-card";
+import {
+  ChartCard,
+  ChartViewport,
+} from "@/features/dashboard/components/charts/chart-card";
 import type { MonthlyCompletionChartPoint } from "@/features/dashboard/types";
 
 interface CompletionTrendChartProps {
@@ -27,12 +29,7 @@ export function CompletionTrendChart({ data }: CompletionTrendChartProps) {
       title="Monthly visit completion trend"
       description="The share of planned visits completed across the last six months."
     >
-      <div
-        aria-label="Line chart showing monthly visit completion rising from 61 percent in January to 74 percent in June"
-        className="h-72 w-full min-w-0"
-        role="img"
-      >
-        <ResponsiveContainer width="100%" height="100%">
+      <ChartViewport accessibleLabel="Line chart showing monthly visit completion rising from 61 percent in January to 74 percent in June">
           <LineChart
             accessibilityLayer
             data={data}
@@ -65,8 +62,7 @@ export function CompletionTrendChart({ data }: CompletionTrendChartProps) {
               unit="%"
             />
           </LineChart>
-        </ResponsiveContainer>
-      </div>
+      </ChartViewport>
     </ChartCard>
   );
 }
