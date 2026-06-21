@@ -5,12 +5,14 @@ import {
   BarChart,
   CartesianGrid,
   Legend,
-  ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
-import { ChartCard } from "@/features/dashboard/components/charts/chart-card";
+import {
+  ChartCard,
+  ChartViewport,
+} from "@/features/dashboard/components/charts/chart-card";
 import type { VisitComparisonChartPoint } from "@/features/dashboard/types";
 
 interface TerritoryVisitsChartProps {
@@ -23,12 +25,7 @@ export function TerritoryVisitsChart({ data }: TerritoryVisitsChartProps) {
       title="Visits by territory"
       description="Weekly execution levels across the four active sales territories."
     >
-      <div
-        aria-label="Bar chart comparing planned and completed visits across Metro North, West Ridge, Central Market, and South District"
-        className="h-72 w-full min-w-0"
-        role="img"
-      >
-        <ResponsiveContainer width="100%" height="100%">
+      <ChartViewport accessibleLabel="Bar chart comparing planned and completed visits across Metro North, West Ridge, Central Market, and South District">
           <BarChart
             accessibilityLayer
             data={data}
@@ -63,8 +60,7 @@ export function TerritoryVisitsChart({ data }: TerritoryVisitsChartProps) {
               radius={[4, 4, 0, 0]}
             />
           </BarChart>
-        </ResponsiveContainer>
-      </div>
+      </ChartViewport>
     </ChartCard>
   );
 }

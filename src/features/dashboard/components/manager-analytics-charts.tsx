@@ -45,7 +45,7 @@ export function ManagerAnalyticsCharts({
       </div>
 
       {hasChartData ? (
-        <div className="grid min-w-0 gap-6 lg:grid-cols-2">
+        <div className="grid min-w-0 gap-6 lg:grid-cols-[repeat(2,minmax(0,1fr))]">
           <ExecutiveVisitsChart data={executiveData} />
           <TerritoryVisitsChart data={territoryData} />
           <CompletionTrendChart data={completionData} />
