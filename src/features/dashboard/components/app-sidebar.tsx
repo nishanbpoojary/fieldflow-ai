@@ -8,7 +8,7 @@ import { DemoRoleSwitcher } from "@/features/dashboard/components/demo-role-swit
 
 interface AppSidebarProps {
   role: AppRole;
-  activeItem?: "overview" | "customers" | "visits";
+  activeItem?: "overview" | "customers" | "visits" | "follow-ups";
 }
 
 const roleProfiles: Record<
@@ -68,12 +68,25 @@ export function AppSidebar({ role, activeItem = "overview" }: AppSidebarProps) {
               item.label === "Customers" || item.label === "My Customers";
             const isVisitItem =
               item.label === "Visits" || item.label === "Today's Visits";
+            const isFollowUpItem = item.label === "Follow-ups";
             const isActive =
               activeItem === "customers"
                 ? isCustomerItem
                 : activeItem === "visits"
                   ? isVisitItem
+                  : activeItem === "follow-ups"
+                    ? isFollowUpItem
                   : item.active;
+            const itemHref = isCustomerItem
+              ? `/customers?role=${role}`
+              : isVisitItem
+                ? `/visits?role=${role}`
+                : `/follow-ups?role=${role}`;
+            const itemDestination = isCustomerItem
+              ? "directory"
+              : isVisitItem
+                ? "planner"
+                : "tracker";
             const itemClassName = `flex min-h-10 items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium lg:min-h-11 ${
               isActive
                 ? "bg-blue-600 text-white shadow-sm shadow-blue-950/40"
@@ -99,11 +112,11 @@ export function AppSidebar({ role, activeItem = "overview" }: AppSidebarProps) {
 
             return (
               <li key={item.label}>
-                {isCustomerItem || isVisitItem ? (
+                {isCustomerItem || isVisitItem || isFollowUpItem ? (
                   <Link
-                    href={`${isCustomerItem ? "/customers" : "/visits"}?role=${role}`}
+                    href={itemHref}
                     aria-current={isActive ? "page" : undefined}
-                    aria-label={`Open ${item.label} demo ${isCustomerItem ? "directory" : "planner"}`}
+                    aria-label={`Open ${item.label} demo ${itemDestination}`}
                     className={`${itemClassName} transition-colors hover:bg-white/5 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-300`}
                   >
                     {itemContent}
