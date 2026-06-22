@@ -620,6 +620,19 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      complete_assigned_visit_plan: {
+        Args: {
+          p_next_follow_up_action?: string
+          p_notes: string
+          p_outcome: string
+          p_visit_plan_id: string
+        }
+        Returns: {
+          completed_at: string
+          visit_id: string
+          visit_plan_id: string
+        }[]
+      }
       current_user_is_manager: { Args: never; Returns: boolean }
       current_user_is_manager_for_team: {
         Args: { target_team_id: string }

@@ -1,4 +1,5 @@
 import type { AppRole } from "@/features/dashboard/types";
+import { CompleteVisitAction } from "@/features/visits/components/complete-visit-action";
 import type {
   VisitPriority,
   VisitRecord,
@@ -9,6 +10,7 @@ interface VisitListProps {
   role: AppRole;
   visits: VisitRecord[];
   hasAuthorizedVisits: boolean;
+  onVisitCompleted: () => void;
 }
 
 const statusStyles: Record<VisitStatus, string> = {
@@ -45,6 +47,7 @@ export function VisitList({
   role,
   visits,
   hasAuthorizedVisits,
+  onVisitCompleted,
 }: VisitListProps) {
   return (
     <section
@@ -110,6 +113,13 @@ export function VisitList({
                     {visit.notes ? <p><span className="font-semibold text-slate-700">Notes:</span> {visit.notes}</p> : null}
                   </div>
                 ) : null}
+
+                <CompleteVisitAction
+                  visitPlanId={visit.id}
+                  visitStatus={visit.status}
+                  isSalesExecutive={role === "sales_executive"}
+                  onSuccess={onVisitCompleted}
+                />
               </article>
             </li>
           ))}

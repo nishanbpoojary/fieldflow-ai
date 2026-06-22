@@ -31,6 +31,7 @@ export function VisitWorkflow({
   today,
 }: VisitWorkflowProps) {
   const [activeFilter, setActiveFilter] = useState<VisitFilter>("all");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const visibleVisits = useMemo(
     () =>
@@ -69,6 +70,15 @@ export function VisitWorkflow({
 
   return (
     <div className="space-y-6">
+      {successMessage ? (
+        <div
+          role="status"
+          className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800"
+        >
+          {successMessage}
+        </div>
+      ) : null}
+
       <VisitSummary items={summaryItems} />
 
       <div className="flex flex-wrap gap-2" aria-label="Filter visits by status">
@@ -93,6 +103,11 @@ export function VisitWorkflow({
         role={context.role}
         visits={visibleVisits}
         hasAuthorizedVisits={visits.length > 0}
+        onVisitCompleted={() =>
+          setSuccessMessage(
+            "Visit completed. The live schedule and outcome details have been refreshed.",
+          )
+        }
       />
     </div>
   );
