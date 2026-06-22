@@ -12,10 +12,14 @@ import {
   territoryVisitChartData,
 } from "@/features/dashboard/data/demo-dashboard";
 
-export function ManagerDashboard() {
+interface ManagerDashboardProps {
+  displayName: string;
+}
+
+export function ManagerDashboard({ displayName }: ManagerDashboardProps) {
   return (
     <div className="min-h-screen bg-slate-100 lg:flex">
-      <AppSidebar role="manager" />
+      <AppSidebar role="manager" displayName={displayName} />
 
       <main id="overview" className="min-w-0 flex-1">
         <header className="border-b border-slate-200 bg-white px-4 py-5 sm:px-6 lg:px-8">
@@ -58,7 +62,7 @@ export function ManagerDashboard() {
                 Weekly command center
               </p>
               <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
-                Welcome back, Avery.
+                Welcome back, {displayName}.
               </h2>
               <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300 sm:text-base sm:leading-7">
                 Your team has completed 31 of 42 planned visits. Focus today on

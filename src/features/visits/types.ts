@@ -28,7 +28,6 @@ export interface VisitCustomerOption {
 export interface VisitPageContext {
   role: AppRole;
   roleLabel: string;
-  roleQuery: string;
 }
 
 export interface NewVisitInput {

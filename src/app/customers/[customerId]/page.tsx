@@ -3,19 +3,27 @@ import {
   getCustomerForRole,
   resolveCustomerDemoRole,
 } from "@/features/customers/data/demo-customers";
+import { requireCurrentUser } from "@/lib/auth/current-user";
 
 interface CustomerDetailPageProps {
   params: Promise<{ customerId: string }>;
-  searchParams: Promise<{ role?: string | string[] }>;
 }
 
 export default async function CustomerDetailPage({
   params,
-  searchParams,
 }: CustomerDetailPageProps) {
-  const [{ customerId }, { role }] = await Promise.all([params, searchParams]);
-  const context = resolveCustomerDemoRole(role);
+  const [{ customerId }, currentUser] = await Promise.all([
+    params,
+    requireCurrentUser(),
+  ]);
+  const context = resolveCustomerDemoRole(currentUser.role);
   const customer = getCustomerForRole(customerId, context.role);
 
-  return <CustomerDetail context={context} customer={customer} />;
+  return (
+    <CustomerDetail
+      context={context}
+      customer={customer}
+      displayName={currentUser.displayName}
+    />
+  );
 }

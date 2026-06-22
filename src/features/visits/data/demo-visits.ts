@@ -148,7 +148,5 @@ export function resolveVisitDemoRole(
     role: resolvedRole,
     roleLabel:
       resolvedRole === "sales_executive" ? "Sales Executive" : "Manager",
-    roleQuery:
-      resolvedRole === "sales_executive" ? "sales_executive" : "manager",
   };
 }

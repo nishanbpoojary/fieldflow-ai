@@ -1,35 +1,39 @@
 import Link from "next/link";
+
+import { SignOutButton } from "@/features/auth/components/sign-out-button";
 import {
   managerNavigation,
   salesExecutiveNavigation,
 } from "@/features/dashboard/data/demo-dashboard";
 import type { AppRole } from "@/features/dashboard/types";
-import { DemoRoleSwitcher } from "@/features/dashboard/components/demo-role-switcher";
 
 interface AppSidebarProps {
   role: AppRole;
+  displayName: string;
   activeItem?: "overview" | "customers" | "visits" | "follow-ups" | "tasks";
 }
 
 const roleProfiles: Record<
   AppRole,
-  { badge: string; name: string; title: string; navigationLabel: string }
+  { badge: string; title: string; navigationLabel: string }
 > = {
   manager: {
     badge: "Manager",
-    name: "Avery Morgan",
     title: "Regional Sales Manager",
     navigationLabel: "Manager workspace",
   },
   sales_executive: {
     badge: "Sales executive",
-    name: "Maya Chen",
     title: "Sales Executive - Metro North",
     navigationLabel: "Sales executive workspace",
   },
 };
 
-export function AppSidebar({ role, activeItem = "overview" }: AppSidebarProps) {
+export function AppSidebar({
+  role,
+  displayName,
+  activeItem = "overview",
+}: AppSidebarProps) {
   const profile = roleProfiles[role];
   const navigation =
     role === "manager" ? managerNavigation : salesExecutiveNavigation;
@@ -56,8 +60,6 @@ export function AppSidebar({ role, activeItem = "overview" }: AppSidebarProps) {
         </span>
       </div>
 
-      <DemoRoleSwitcher activeRole={role} />
-
       <nav aria-label={profile.navigationLabel} className="px-3 py-4 lg:px-4 lg:py-2">
         <p className="hidden px-3 pb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 lg:block">
           Workspace
@@ -81,12 +83,12 @@ export function AppSidebar({ role, activeItem = "overview" }: AppSidebarProps) {
                       ? isTaskItem
                       : item.active;
             const itemHref = isCustomerItem
-              ? `/customers?role=${role}`
+              ? "/customers"
               : isVisitItem
-                ? `/visits?role=${role}`
+                ? "/visits"
                 : isFollowUpItem
-                  ? `/follow-ups?role=${role}`
-                  : `/tasks?role=${role}`;
+                  ? "/follow-ups"
+                  : "/tasks";
             const itemDestination = isCustomerItem
               ? "directory"
               : isVisitItem
@@ -123,7 +125,7 @@ export function AppSidebar({ role, activeItem = "overview" }: AppSidebarProps) {
                   <Link
                     href={itemHref}
                     aria-current={isActive ? "page" : undefined}
-                    aria-label={`Open ${item.label} demo ${itemDestination}`}
+                    aria-label={`Open ${item.label} ${itemDestination}`}
                     className={`${itemClassName} transition-colors hover:bg-white/5 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-300`}
                   >
                     {itemContent}
@@ -142,11 +144,11 @@ export function AppSidebar({ role, activeItem = "overview" }: AppSidebarProps) {
         </ul>
       </nav>
 
-      <div className="mt-auto hidden border-t border-white/10 p-4 lg:block">
+      <div className="mt-auto border-t border-white/10 p-4">
         <div className="rounded-xl bg-white/5 p-3.5">
-          <p className="text-sm font-medium text-white">{profile.name}</p>
+          <p className="text-sm font-medium text-white">{displayName}</p>
           <p className="mt-0.5 text-xs leading-5 text-slate-400">{profile.title}</p>
-          <p className="mt-3 text-[11px] text-slate-500">Synthetic demo profile</p>
+          <SignOutButton />
         </div>
       </div>
     </aside>

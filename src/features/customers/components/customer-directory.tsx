@@ -12,9 +12,14 @@ import type {
 interface CustomerDirectoryProps {
   context: CustomerPageContext;
   customers: DemoCustomer[];
+  displayName: string;
 }
 
-export function CustomerDirectory({ context, customers }: CustomerDirectoryProps) {
+export function CustomerDirectory({
+  context,
+  customers,
+  displayName,
+}: CustomerDirectoryProps) {
   const isSalesExecutive = context.role === "sales_executive";
   const title = isSalesExecutive ? "My Customers" : "Team Customer Directory";
   const description = isSalesExecutive
@@ -23,7 +28,11 @@ export function CustomerDirectory({ context, customers }: CustomerDirectoryProps
 
   return (
     <div className="min-h-screen bg-slate-100 lg:flex">
-      <AppSidebar activeItem="customers" role={context.role} />
+      <AppSidebar
+        activeItem="customers"
+        role={context.role}
+        displayName={displayName}
+      />
 
       <main className="min-w-0 flex-1">
         <header className="border-b border-slate-200 bg-white px-4 py-5 sm:px-6 lg:px-8">
@@ -116,7 +125,7 @@ export function CustomerDirectory({ context, customers }: CustomerDirectoryProps
                       </dl>
 
                       <Link
-                        href={`/customers/${customer.id}?role=${context.roleQuery}`}
+                        href={`/customers/${customer.id}`}
                         aria-label={`View ${customer.companyName} customer details as ${context.roleLabel}`}
                         className="mt-5 inline-flex min-h-10 w-full items-center justify-center rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                       >

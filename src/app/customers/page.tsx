@@ -3,15 +3,18 @@ import {
   getCustomersForRole,
   resolveCustomerDemoRole,
 } from "@/features/customers/data/demo-customers";
+import { requireCurrentUser } from "@/lib/auth/current-user";
 
-interface CustomersPageProps {
-  searchParams: Promise<{ role?: string | string[] }>;
-}
-
-export default async function CustomersPage({ searchParams }: CustomersPageProps) {
-  const { role } = await searchParams;
-  const context = resolveCustomerDemoRole(role);
+export default async function CustomersPage() {
+  const currentUser = await requireCurrentUser();
+  const context = resolveCustomerDemoRole(currentUser.role);
   const customers = getCustomersForRole(context.role);
 
-  return <CustomerDirectory context={context} customers={customers} />;
+  return (
+    <CustomerDirectory
+      context={context}
+      customers={customers}
+      displayName={currentUser.displayName}
+    />
+  );
 }

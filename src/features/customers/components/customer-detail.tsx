@@ -14,20 +14,27 @@ import type {
 interface CustomerDetailProps {
   context: CustomerPageContext;
   customer?: DemoCustomer;
+  displayName: string;
 }
 
-export function CustomerDetail({ context, customer }: CustomerDetailProps) {
-  const directoryHref = `/customers?role=${context.roleQuery}`;
-
+export function CustomerDetail({
+  context,
+  customer,
+  displayName,
+}: CustomerDetailProps) {
   return (
     <div className="min-h-screen bg-slate-100 lg:flex">
-      <AppSidebar activeItem="customers" role={context.role} />
+      <AppSidebar
+        activeItem="customers"
+        role={context.role}
+        displayName={displayName}
+      />
 
       <main className="min-w-0 flex-1">
         <header className="border-b border-slate-200 bg-white px-4 py-5 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-[1500px]">
             <Link
-              href={directoryHref}
+              href="/customers"
               className="inline-flex min-h-10 items-center text-sm font-semibold text-blue-700 hover:text-blue-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
             >
               <span aria-hidden="true" className="mr-2">
@@ -223,11 +230,11 @@ function CustomerUnavailable({ context }: { context: CustomerPageContext }) {
         <h1 className="mt-5 text-xl font-semibold text-slate-950">Customer unavailable</h1>
         <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-slate-500">
           {context.role === "sales_executive"
-            ? "This synthetic customer is not assigned to Maya Chen in Sales Executive demo mode. This filtering demonstrates the intended experience; it is not real authorization."
+            ? "This synthetic customer is not assigned to Maya Chen in the Sales Executive view. Database authorization remains enforced separately by RLS."
             : "This customer id does not match a record in the representative synthetic demo dataset."}
         </p>
         <Link
-          href={`/customers?role=${context.roleQuery}`}
+          href="/customers"
           className="mt-6 inline-flex min-h-10 items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
         >
           Return to customer directory

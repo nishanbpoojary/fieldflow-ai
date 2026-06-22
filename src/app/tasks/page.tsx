@@ -5,14 +5,11 @@ import {
   resolveTaskDemoRole,
   taskCustomerOptions,
 } from "@/features/tasks/data/demo-tasks";
+import { requireCurrentUser } from "@/lib/auth/current-user";
 
-interface TasksPageProps {
-  searchParams: Promise<{ role?: string | string[] }>;
-}
-
-export default async function TasksPage({ searchParams }: TasksPageProps) {
-  const { role: requestedRole } = await searchParams;
-  const context = resolveTaskDemoRole(requestedRole);
+export default async function TasksPage() {
+  const currentUser = await requireCurrentUser();
+  const context = resolveTaskDemoRole(currentUser.role);
   const customers =
     context.role === "sales_executive"
       ? taskCustomerOptions.filter(
@@ -23,6 +20,7 @@ export default async function TasksPage({ searchParams }: TasksPageProps) {
   return (
     <TaskPageShell
       context={context}
+      displayName={currentUser.displayName}
       initialTasks={demoTasks}
       customers={customers}
       demoToday={TASK_DEMO_TODAY}
