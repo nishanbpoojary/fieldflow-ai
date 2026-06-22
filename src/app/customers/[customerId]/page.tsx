@@ -1,8 +1,5 @@
 import { CustomerDetail } from "@/features/customers/components/customer-detail";
-import {
-  getCustomerForRole,
-  resolveCustomerDemoRole,
-} from "@/features/customers/data/demo-customers";
+import { getCustomerDetail } from "@/features/customers/data/customers";
 import { requireCurrentUser } from "@/lib/auth/current-user";
 
 interface CustomerDetailPageProps {
@@ -16,14 +13,18 @@ export default async function CustomerDetailPage({
     params,
     requireCurrentUser(),
   ]);
-  const context = resolveCustomerDemoRole(currentUser.role);
-  const customer = getCustomerForRole(customerId, context.role);
+  const context = {
+    role: currentUser.role,
+    roleLabel:
+      currentUser.role === "sales_executive" ? "Sales Executive" : "Manager",
+  };
+  const result = await getCustomerDetail(currentUser, customerId);
 
   return (
     <CustomerDetail
       context={context}
-      customer={customer}
       displayName={currentUser.displayName}
+      result={result}
     />
   );
 }

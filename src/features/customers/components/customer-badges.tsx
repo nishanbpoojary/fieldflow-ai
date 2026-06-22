@@ -7,9 +7,10 @@ import type {
 
 const customerStatusStyles: Record<CustomerStatus, string> = {
   Active: "bg-emerald-50 text-emerald-700",
-  New: "bg-blue-50 text-blue-700",
-  "Follow-up needed": "bg-rose-50 text-rose-700",
-  Dormant: "bg-slate-100 text-slate-600",
+  "At risk": "bg-rose-50 text-rose-700",
+  Converted: "bg-teal-50 text-teal-700",
+  Inactive: "bg-slate-100 text-slate-600",
+  Prospect: "bg-blue-50 text-blue-700",
 };
 
 const priorityStyles: Record<CustomerPriority, string> = {

@@ -1,30 +1,27 @@
-import Link from "next/link";
 import { AppSidebar } from "@/features/dashboard/components/app-sidebar";
-import {
-  CustomerPriorityBadge,
-  CustomerStatusBadge,
-} from "@/features/customers/components/customer-badges";
+import { CustomerList } from "@/features/customers/components/customer-list";
 import type {
+  CustomerDirectoryResult,
   CustomerPageContext,
-  DemoCustomer,
 } from "@/features/customers/types";
 
 interface CustomerDirectoryProps {
   context: CustomerPageContext;
-  customers: DemoCustomer[];
   displayName: string;
+  result: CustomerDirectoryResult;
 }
 
 export function CustomerDirectory({
   context,
-  customers,
   displayName,
+  result,
 }: CustomerDirectoryProps) {
   const isSalesExecutive = context.role === "sales_executive";
   const title = isSalesExecutive ? "My Customers" : "Team Customer Directory";
   const description = isSalesExecutive
-    ? "A representative demo subset of customers assigned to Maya Chen."
-    : "A representative team demo subset, not all 148 customers shown in dashboard totals.";
+    ? "Authorized customer accounts assigned to your sales profile."
+    : "Authorized customer coverage across your current sales team.";
+  const customers = result.status === "ready" ? result.customers : [];
 
   return (
     <div className="min-h-screen bg-slate-100 lg:flex">
@@ -43,7 +40,7 @@ export function CustomerDirectory({
                   {title}
                 </h1>
                 <span className="rounded-full border border-blue-200 bg-blue-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-blue-700">
-                  Demo data
+                  Synthetic database data
                 </span>
               </div>
               <p className="mt-1 max-w-3xl text-sm leading-6 text-slate-500">
@@ -52,7 +49,7 @@ export function CustomerDirectory({
             </div>
             <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 sm:text-right">
               <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
-                Demo view
+                Authorized view
               </p>
               <p className="mt-0.5 text-sm font-semibold text-slate-700">
                 {context.roleLabel}
@@ -78,81 +75,76 @@ export function CustomerDirectory({
                   {isSalesExecutive ? "Assigned accounts" : "Team accounts"}
                 </h2>
                 <p className="mt-1 text-sm text-slate-500">
-                  Select a customer to review their static activity details.
+                  Search the current authorized records and open a customer profile.
                 </p>
               </div>
-              <span className="w-fit rounded-full bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600">
-                {customers.length} demo {customers.length === 1 ? "customer" : "customers"}
-              </span>
+              {result.status === "ready" ? (
+                <span className="w-fit rounded-full bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600">
+                  {customers.length} {customers.length === 1 ? "customer" : "customers"}
+                </span>
+              ) : null}
             </div>
 
-            {customers.length > 0 ? (
-              <ul className="mt-5 grid min-w-0 gap-4 md:grid-cols-2 2xl:grid-cols-3">
-                {customers.map((customer) => (
-                  <li key={customer.id} className="min-w-0">
-                    <article className="h-full rounded-xl border border-slate-200 bg-slate-50/50 p-4 transition-colors hover:border-blue-200 hover:bg-blue-50/30 sm:p-5">
-                      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                        <div className="min-w-0">
-                          <h3 className="break-words text-base font-semibold text-slate-900">
-                            {customer.companyName}
-                          </h3>
-                          <p className="mt-1 text-xs text-slate-500">
-                            {customer.territory}
-                          </p>
-                        </div>
-                        <CustomerStatusBadge status={customer.status} />
-                      </div>
-
-                      <div className="mt-4 flex flex-wrap gap-2">
-                        <CustomerPriorityBadge priority={customer.priority} />
-                      </div>
-
-                      <dl className="mt-4 space-y-3 border-t border-slate-200 pt-4 text-sm">
-                        {!isSalesExecutive ? (
-                          <div className="flex flex-col gap-1 sm:flex-row sm:justify-between sm:gap-3">
-                            <dt className="text-xs text-slate-500">Assigned executive</dt>
-                            <dd className="text-xs font-semibold text-slate-700">
-                              {customer.assignedSalesExecutive}
-                            </dd>
-                          </div>
-                        ) : null}
-                        <div className="flex flex-col gap-1 sm:flex-row sm:justify-between sm:gap-3">
-                          <dt className="text-xs text-slate-500">Next follow-up</dt>
-                          <dd className="text-xs font-semibold text-slate-700">
-                            {customer.nextFollowUpDate}
-                          </dd>
-                        </div>
-                      </dl>
-
-                      <Link
-                        href={`/customers/${customer.id}`}
-                        aria-label={`View ${customer.companyName} customer details as ${context.roleLabel}`}
-                        className="mt-5 inline-flex min-h-10 w-full items-center justify-center rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                      >
-                        View customer details
-                      </Link>
-                    </article>
-                  </li>
-                ))}
-              </ul>
+            {result.status === "unavailable" ? (
+              <DirectoryState
+                title="Customer data is temporarily unavailable"
+                description="We could not load the authorized customer directory. Please refresh the page or try again shortly."
+                tone="warning"
+              />
+            ) : customers.length === 0 ? (
+              <DirectoryState
+                title="No customers available"
+                description={
+                  isSalesExecutive
+                    ? "No customer records are currently assigned to your sales profile."
+                    : "This team does not currently have customer records to display."
+                }
+                tone="empty"
+              />
             ) : (
-              <div className="mt-5 rounded-xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center">
-                <h3 className="text-sm font-semibold text-slate-800">
-                  No demo customers available
-                </h3>
-                <p className="mt-2 text-sm leading-6 text-slate-500">
-                  This role does not currently have matching records in the synthetic dataset.
-                </p>
-              </div>
+              <CustomerList
+                customers={customers}
+                roleLabel={context.roleLabel}
+                showAssignedExecutive={!isSalesExecutive}
+              />
             )}
           </section>
 
           <footer className="flex flex-col gap-1 border-t border-slate-200 py-2 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
             <p>FieldFlow AI customer directory</p>
-            <p>Demo filtering is not authentication or authorization.</p>
+            <p>Access is limited by the authenticated profile and database policies.</p>
           </footer>
         </div>
       </main>
+    </div>
+  );
+}
+
+function DirectoryState({
+  title,
+  description,
+  tone,
+}: {
+  title: string;
+  description: string;
+  tone: "empty" | "warning";
+}) {
+  return (
+    <div className="mt-5 rounded-xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center">
+      <span
+        aria-hidden="true"
+        className={`mx-auto grid size-11 place-items-center rounded-full text-sm font-bold ${
+          tone === "warning"
+            ? "bg-amber-100 text-amber-700"
+            : "bg-blue-100 text-blue-700"
+        }`}
+      >
+        {tone === "warning" ? "!" : "0"}
+      </span>
+      <h3 className="mt-4 text-sm font-semibold text-slate-800">{title}</h3>
+      <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-slate-500">
+        {description}
+      </p>
     </div>
   );
 }
