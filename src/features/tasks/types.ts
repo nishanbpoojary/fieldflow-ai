@@ -1,28 +1,27 @@
 import type { AppRole } from "@/features/dashboard/types";
 
-export type TaskStatus = "overdue" | "due_today" | "upcoming" | "completed";
+export type TaskStatus =
+  | "overdue"
+  | "due_today"
+  | "upcoming"
+  | "completed"
+  | "cancelled";
 export type TaskPriority = "high" | "medium" | "low";
+export type TaskState = "open" | "completed" | "cancelled";
 
-export interface DemoTask {
+export interface TaskRecord {
   id: string;
   title: string;
-  customerId?: string;
-  customerName?: string;
-  territory: string;
+  customerName: string | null;
+  territory: string | null;
   assignedSalesExecutive: string;
   dueDate: string;
   priority: TaskPriority;
   status: TaskStatus;
-  planningNote?: string;
-  completionNote?: string;
-  completedDate?: string;
-}
-
-export interface TaskCustomerOption {
-  id: string;
-  companyName: string;
-  territory: string;
-  assignedSalesExecutive: string;
+  state: TaskState;
+  planningNote: string | null;
+  completionNote: string | null;
+  completedAt: string | null;
 }
 
 export interface TaskPageContext {
@@ -30,10 +29,6 @@ export interface TaskPageContext {
   roleLabel: string;
 }
 
-export interface NewTaskInput {
-  title: string;
-  customerId: string;
-  dueDate: string;
-  priority: TaskPriority;
-  planningNote?: string;
-}
+export type TaskWorkspaceResult =
+  | { status: "ready"; tasks: TaskRecord[]; today: string }
+  | { status: "unavailable"; today: string };
