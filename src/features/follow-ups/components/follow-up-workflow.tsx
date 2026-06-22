@@ -30,6 +30,7 @@ export function FollowUpWorkflow({
   followUps,
 }: FollowUpWorkflowProps) {
   const [activeFilter, setActiveFilter] = useState<FollowUpFilter>("all");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const visibleFollowUps = useMemo(
     () =>
@@ -52,6 +53,15 @@ export function FollowUpWorkflow({
 
   return (
     <div className="space-y-6">
+      {successMessage ? (
+        <div
+          role="status"
+          className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800"
+        >
+          {successMessage}
+        </div>
+      ) : null}
+
       <FollowUpSummary counts={summaryCounts} />
 
       <div className="flex flex-wrap gap-2" aria-label="Filter follow-ups by status">
@@ -76,6 +86,11 @@ export function FollowUpWorkflow({
         role={context.role}
         followUps={visibleFollowUps}
         hasAuthorizedFollowUps={followUps.length > 0}
+        onFollowUpCompleted={() =>
+          setSuccessMessage(
+            "Follow-up completed. The live queue and completion details have been refreshed.",
+          )
+        }
       />
     </div>
   );
