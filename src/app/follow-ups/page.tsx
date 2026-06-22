@@ -1,29 +1,20 @@
 import { FollowUpPageShell } from "@/features/follow-ups/components/follow-up-page-shell";
-import {
-  FOLLOW_UP_DEMO_TODAY,
-  demoFollowUps,
-  followUpCustomerOptions,
-  resolveFollowUpDemoRole,
-} from "@/features/follow-ups/data/demo-follow-ups";
+import { getFollowUpWorkspace } from "@/features/follow-ups/data/follow-ups";
 import { requireCurrentUser } from "@/lib/auth/current-user";
 
 export default async function FollowUpsPage() {
   const currentUser = await requireCurrentUser();
-  const context = resolveFollowUpDemoRole(currentUser.role);
-  const customers =
-    context.role === "sales_executive"
-      ? followUpCustomerOptions.filter(
-          (customer) => customer.assignedSalesExecutive === "Maya Chen",
-        )
-      : [];
+  const result = await getFollowUpWorkspace(currentUser);
 
   return (
     <FollowUpPageShell
-      context={context}
+      context={{
+        role: currentUser.role,
+        roleLabel:
+          currentUser.role === "manager" ? "Manager" : "Sales Executive",
+      }}
       displayName={currentUser.displayName}
-      initialFollowUps={demoFollowUps}
-      customers={customers}
-      demoToday={FOLLOW_UP_DEMO_TODAY}
+      result={result}
     />
   );
 }
