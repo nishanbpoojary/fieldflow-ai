@@ -2,6 +2,13 @@ import type { AppRole } from "@/features/dashboard/types";
 
 export type CustomerStatus =
   | "Active"
+  | "At risk"
+  | "Converted"
+  | "Inactive"
+  | "Prospect";
+
+export type DemoCustomerStatus =
+  | "Active"
   | "New"
   | "Follow-up needed"
   | "Dormant";
@@ -35,7 +42,7 @@ export interface DemoCustomer {
   phone: string;
   email: string;
   territory: string;
-  status: CustomerStatus;
+  status: DemoCustomerStatus;
   priority: CustomerPriority;
   assignedSalesExecutive: string;
   lastInteractionDate: string;
@@ -49,3 +56,27 @@ export interface CustomerPageContext {
   role: AppRole;
   roleLabel: string;
 }
+
+export interface CustomerRecord {
+  id: string;
+  companyName: string;
+  contactPerson: string;
+  phone: string;
+  email: string;
+  territory: string;
+  status: CustomerStatus;
+  priority: CustomerPriority;
+  assignedSalesExecutive: string;
+  lastInteractionDate: string;
+  nextFollowUpDate: string;
+  notes: string;
+}
+
+export type CustomerDirectoryResult =
+  | { status: "ready"; customers: CustomerRecord[] }
+  | { status: "unavailable" };
+
+export type CustomerDetailResult =
+  | { status: "ready"; customer: CustomerRecord }
+  | { status: "not_found" }
+  | { status: "unavailable" };
