@@ -66,6 +66,7 @@ export function AppSidebar({
         </p>
         <ul className="grid grid-cols-2 gap-1.5 sm:grid-cols-3 md:grid-cols-4 lg:block lg:space-y-1.5">
           {navigation.map((item) => {
+            const isOverviewItem = item.label === "Overview";
             const isCustomerItem =
               item.label === "Customers" || item.label === "My Customers";
             const isVisitItem =
@@ -82,20 +83,24 @@ export function AppSidebar({
                     : activeItem === "tasks"
                       ? isTaskItem
                       : item.active;
-            const itemHref = isCustomerItem
-              ? "/customers"
-              : isVisitItem
-                ? "/visits"
-                : isFollowUpItem
-                  ? "/follow-ups"
-                  : "/tasks";
-            const itemDestination = isCustomerItem
-              ? "directory"
-              : isVisitItem
-                ? "planner"
-                : isFollowUpItem
-                  ? "tracker"
-                  : "board";
+            const itemHref = isOverviewItem
+              ? "/"
+              : isCustomerItem
+                ? "/customers"
+                : isVisitItem
+                  ? "/visits"
+                  : isFollowUpItem
+                    ? "/follow-ups"
+                    : "/tasks";
+            const itemDestination = isOverviewItem
+              ? "dashboard"
+              : isCustomerItem
+                ? "directory"
+                : isVisitItem
+                  ? "planner"
+                  : isFollowUpItem
+                    ? "tracker"
+                    : "board";
             const itemClassName = `flex min-h-10 items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium lg:min-h-11 ${
               isActive
                 ? "bg-blue-600 text-white shadow-sm shadow-blue-950/40"
@@ -121,7 +126,11 @@ export function AppSidebar({
 
             return (
               <li key={item.label}>
-                {isCustomerItem || isVisitItem || isFollowUpItem || isTaskItem ? (
+                {isOverviewItem ||
+                isCustomerItem ||
+                isVisitItem ||
+                isFollowUpItem ||
+                isTaskItem ? (
                   <Link
                     href={itemHref}
                     aria-current={isActive ? "page" : undefined}

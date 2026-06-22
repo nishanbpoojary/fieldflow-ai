@@ -47,8 +47,8 @@ export interface DashboardNavigationItem {
   active: boolean;
 }
 
-export type VisitStatus = "Completed" | "Scheduled" | "Pending";
-export type VisitPriority = "High" | "Standard";
+export type VisitStatus = "Pending" | "Completed" | "Missed" | "Cancelled";
+export type VisitPriority = "High" | "Medium" | "Low";
 
 export interface PlannedVisit {
   id: string;
@@ -59,24 +59,35 @@ export interface PlannedVisit {
   priority: VisitPriority;
 }
 
-export type CustomerStatus = "Active" | "Follow-up needed" | "New";
+export type CustomerStatus =
+  | "Prospect"
+  | "Active"
+  | "At risk"
+  | "Converted"
+  | "Inactive";
 
 export interface AssignedCustomer {
   id: string;
   companyName: string;
   territory: string;
   status: CustomerStatus;
-  nextFollowUp: string;
+  nextFollowUp: string | null;
 }
 
 export type TaskPriority = "High" | "Medium" | "Low";
 
-export interface UpcomingTask {
+export type SalesPriorityStatus = "Overdue" | "Due today" | "Upcoming";
+
+export interface SalesPriorityItem {
   id: string;
+  kind: "Follow-up" | "Task";
   title: string;
-  customerName: string;
+  customerName: string | null;
+  territory: string | null;
   dueDate: string;
   priority: TaskPriority;
+  status: SalesPriorityStatus;
+  state: "Open";
 }
 
 export interface PersonalPerformance {
@@ -85,6 +96,32 @@ export interface PersonalPerformance {
   completionPercentage: number;
   summary: string;
 }
+
+export interface SalesFocus {
+  title: string;
+  detail: string;
+  pendingVisits: number;
+  overdueWork: number;
+}
+
+export interface SalesExecutiveDashboardData {
+  today: string;
+  weekStart: string;
+  weekEnd: string;
+  periodLabel: string;
+  summary: string;
+  kpis: DashboardKpi[];
+  todaysVisits: PlannedVisit[];
+  assignedCustomers: AssignedCustomer[];
+  priorities: SalesPriorityItem[];
+  performance: PersonalPerformance;
+  focus: SalesFocus;
+}
+
+export type SalesExecutiveDashboardResult =
+  | { status: "ready"; data: SalesExecutiveDashboardData }
+  | { status: "empty"; periodLabel: string; today: string }
+  | { status: "unavailable"; periodLabel: string; today: string };
 
 export interface VisitComparisonChartPoint {
   label: string;
