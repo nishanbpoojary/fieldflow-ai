@@ -11,7 +11,7 @@ export interface DashboardKpi {
   tone: KpiTone;
 }
 
-export type FollowUpPriority = "High" | "Medium";
+export type FollowUpPriority = "High" | "Medium" | "Low";
 
 export interface OverdueFollowUp {
   id: string;
@@ -92,8 +92,8 @@ export interface VisitComparisonChartPoint {
   completedVisits: number;
 }
 
-export interface MonthlyCompletionChartPoint {
-  month: string;
+export interface CompletionTrendChartPoint {
+  label: string;
   completionPercentage: number;
 }
 
@@ -102,3 +102,24 @@ export interface CustomerStatusChartPoint {
   count: number;
   fill: string;
 }
+
+export interface ManagerDashboardData {
+  today: string;
+  weekStart: string;
+  weekEnd: string;
+  periodLabel: string;
+  summary: string;
+  kpis: DashboardKpi[];
+  overdueFollowUps: OverdueFollowUp[];
+  teamPerformance: TeamPerformanceMember[];
+  managerPriorities: ManagerPriority[];
+  executiveVisitChartData: VisitComparisonChartPoint[];
+  territoryVisitChartData: VisitComparisonChartPoint[];
+  completionTrendChartData: CompletionTrendChartPoint[];
+  customerStatusChartData: CustomerStatusChartPoint[];
+}
+
+export type ManagerDashboardResult =
+  | { status: "ready"; data: ManagerDashboardData }
+  | { status: "empty"; periodLabel: string; today: string }
+  | { status: "unavailable"; periodLabel: string; today: string };

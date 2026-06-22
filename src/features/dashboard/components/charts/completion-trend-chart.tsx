@@ -13,10 +13,10 @@ import {
   ChartCard,
   ChartViewport,
 } from "@/features/dashboard/components/charts/chart-card";
-import type { MonthlyCompletionChartPoint } from "@/features/dashboard/types";
+import type { CompletionTrendChartPoint } from "@/features/dashboard/types";
 
 interface CompletionTrendChartProps {
-  data: MonthlyCompletionChartPoint[];
+  data: CompletionTrendChartPoint[];
 }
 
 function formatPercentage(value: number) {
@@ -24,12 +24,16 @@ function formatPercentage(value: number) {
 }
 
 export function CompletionTrendChart({ data }: CompletionTrendChartProps) {
+  const accessibleLabel = `Line chart showing daily visit completion for the current week: ${data
+    .map((item) => `${item.label}, ${item.completionPercentage} percent`)
+    .join("; ")}`;
+
   return (
     <ChartCard
-      title="Monthly visit completion trend"
-      description="The share of planned visits completed across the last six months."
+      title="Weekly visit completion trend"
+      description="The share of each day's planned visits completed this week."
     >
-      <ChartViewport accessibleLabel="Line chart showing monthly visit completion rising from 61 percent in January to 74 percent in June">
+      <ChartViewport accessibleLabel={accessibleLabel}>
           <LineChart
             accessibilityLayer
             data={data}
@@ -37,14 +41,14 @@ export function CompletionTrendChart({ data }: CompletionTrendChartProps) {
           >
             <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="label"
               axisLine={false}
               tick={{ fill: "#64748b", fontSize: 11 }}
               tickLine={false}
             />
             <YAxis
               axisLine={false}
-              domain={[50, 100]}
+              domain={[0, 100]}
               tick={{ fill: "#64748b", fontSize: 11 }}
               tickFormatter={formatPercentage}
               tickLine={false}

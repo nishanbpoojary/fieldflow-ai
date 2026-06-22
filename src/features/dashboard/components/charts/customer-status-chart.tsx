@@ -17,12 +17,17 @@ interface CustomerStatusChartProps {
 }
 
 export function CustomerStatusChart({ data }: CustomerStatusChartProps) {
+  const customerCount = data.reduce((total, item) => total + item.count, 0);
+  const accessibleLabel = `Donut chart showing customer status counts: ${data
+    .map((item) => `${item.status}, ${item.count}`)
+    .join("; ")}`;
+
   return (
     <ChartCard
       title="Customer status breakdown"
-      description="Distribution of all 148 assigned customer accounts by status."
+      description={`Distribution of ${customerCount} customer account${customerCount === 1 ? "" : "s"} by status.`}
     >
-      <ChartViewport accessibleLabel="Donut chart showing 82 active, 28 follow-up due, 21 new, and 17 dormant customers">
+      <ChartViewport accessibleLabel={accessibleLabel}>
           <PieChart accessibilityLayer>
             <Pie
               data={data}
