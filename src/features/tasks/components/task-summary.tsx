@@ -34,13 +34,19 @@ const summaryItems: Array<{
     detail: "Completion notes recorded",
     tone: "border-t-emerald-500 text-emerald-950",
   },
+  {
+    status: "cancelled",
+    label: "Cancelled",
+    detail: "Removed from active work",
+    tone: "border-t-slate-400 text-slate-950",
+  },
 ];
 
 export function TaskSummary({ counts }: TaskSummaryProps) {
   return (
     <section
       aria-label="Task summary"
-      className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"
+      className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5"
     >
       {summaryItems.map((item) => (
         <article
