@@ -1,4 +1,5 @@
 import type { AppRole } from "@/features/dashboard/types";
+import { CompleteTaskAction } from "@/features/tasks/components/complete-task-action";
 import type {
   TaskPriority,
   TaskRecord,
@@ -9,6 +10,7 @@ interface TaskListProps {
   role: AppRole;
   tasks: TaskRecord[];
   hasAuthorizedTasks: boolean;
+  onTaskCompleted: () => void;
 }
 
 const statusGroups: Array<{ status: TaskStatus; label: string }> = [
@@ -57,6 +59,7 @@ export function TaskList({
   role,
   tasks,
   hasAuthorizedTasks,
+  onTaskCompleted,
 }: TaskListProps) {
   if (tasks.length === 0) {
     return (
@@ -192,6 +195,13 @@ export function TaskList({
                           {task.completionNote}
                         </p>
                       ) : null}
+
+                      <CompleteTaskAction
+                        taskId={task.id}
+                        state={task.state}
+                        isSalesExecutive={role === "sales_executive"}
+                        onSuccess={onTaskCompleted}
+                      />
                     </article>
                   </li>
                 ))}
