@@ -8,6 +8,7 @@ import type {
 
 interface VisitPageShellProps {
   context: VisitPageContext;
+  displayName: string;
   initialVisits: DemoVisit[];
   customers: VisitCustomerOption[];
   salesExecutives: readonly string[];
@@ -26,6 +27,7 @@ function formatOverviewDate(date: string) {
 
 export function VisitPageShell({
   context,
+  displayName,
   initialVisits,
   customers,
   salesExecutives,
@@ -35,7 +37,11 @@ export function VisitPageShell({
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-950 lg:flex">
-      <AppSidebar role={context.role} activeItem="visits" />
+      <AppSidebar
+        role={context.role}
+        displayName={displayName}
+        activeItem="visits"
+      />
 
       <main className="min-w-0 flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-8 xl:px-10">
         <div className="mx-auto max-w-7xl">

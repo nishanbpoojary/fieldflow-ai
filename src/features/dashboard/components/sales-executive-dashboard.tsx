@@ -7,10 +7,16 @@ import { TodaysVisits } from "@/features/dashboard/components/todays-visits";
 import { UpcomingTasks } from "@/features/dashboard/components/upcoming-tasks";
 import { salesExecutiveKpis } from "@/features/dashboard/data/sales-executive-dashboard";
 
-export function SalesExecutiveDashboard() {
+interface SalesExecutiveDashboardProps {
+  displayName: string;
+}
+
+export function SalesExecutiveDashboard({
+  displayName,
+}: SalesExecutiveDashboardProps) {
   return (
     <div className="min-h-screen bg-slate-100 lg:flex">
-      <AppSidebar role="sales_executive" />
+      <AppSidebar role="sales_executive" displayName={displayName} />
 
       <main id="overview" className="min-w-0 flex-1">
         <header className="border-b border-slate-200 bg-white px-4 py-5 sm:px-6 lg:px-8">
@@ -53,7 +59,7 @@ export function SalesExecutiveDashboard() {
                 Today&apos;s field plan
               </p>
               <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
-                Good morning, Maya.
+                Good morning, {displayName}.
               </h2>
               <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300 sm:text-base sm:leading-7">
                 Two of your five visits are complete. Your next priority is Summit

@@ -5,16 +5,11 @@ import {
   followUpCustomerOptions,
   resolveFollowUpDemoRole,
 } from "@/features/follow-ups/data/demo-follow-ups";
+import { requireCurrentUser } from "@/lib/auth/current-user";
 
-interface FollowUpsPageProps {
-  searchParams: Promise<{ role?: string | string[] }>;
-}
-
-export default async function FollowUpsPage({
-  searchParams,
-}: FollowUpsPageProps) {
-  const { role: requestedRole } = await searchParams;
-  const context = resolveFollowUpDemoRole(requestedRole);
+export default async function FollowUpsPage() {
+  const currentUser = await requireCurrentUser();
+  const context = resolveFollowUpDemoRole(currentUser.role);
   const customers =
     context.role === "sales_executive"
       ? followUpCustomerOptions.filter(
@@ -25,6 +20,7 @@ export default async function FollowUpsPage({
   return (
     <FollowUpPageShell
       context={context}
+      displayName={currentUser.displayName}
       initialFollowUps={demoFollowUps}
       customers={customers}
       demoToday={FOLLOW_UP_DEMO_TODAY}

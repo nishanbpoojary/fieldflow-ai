@@ -8,6 +8,7 @@ import type {
 
 interface TaskPageShellProps {
   context: TaskPageContext;
+  displayName: string;
   initialTasks: DemoTask[];
   customers: TaskCustomerOption[];
   demoToday: string;
@@ -25,6 +26,7 @@ function formatOverviewDate(date: string) {
 
 export function TaskPageShell({
   context,
+  displayName,
   initialTasks,
   customers,
   demoToday,
@@ -33,7 +35,11 @@ export function TaskPageShell({
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-950 lg:flex">
-      <AppSidebar role={context.role} activeItem="tasks" />
+      <AppSidebar
+        role={context.role}
+        displayName={displayName}
+        activeItem="tasks"
+      />
 
       <main className="min-w-0 flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-8 xl:px-10">
         <div className="mx-auto max-w-7xl">
