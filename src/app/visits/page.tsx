@@ -1,31 +1,20 @@
 import { VisitPageShell } from "@/features/visits/components/visit-page-shell";
-import {
-  DEMO_TODAY,
-  demoVisits,
-  resolveVisitDemoRole,
-  salesExecutives,
-  visitCustomerOptions,
-} from "@/features/visits/data/demo-visits";
+import { getVisitWorkspace } from "@/features/visits/data/visits";
 import { requireCurrentUser } from "@/lib/auth/current-user";
 
 export default async function VisitsPage() {
   const currentUser = await requireCurrentUser();
-  const context = resolveVisitDemoRole(currentUser.role);
-  const customers =
-    context.role === "sales_executive"
-      ? visitCustomerOptions.filter(
-          (customer) => customer.assignedSalesExecutive === "Maya Chen",
-        )
-      : visitCustomerOptions;
+  const result = await getVisitWorkspace(currentUser);
 
   return (
     <VisitPageShell
-      context={context}
+      context={{
+        role: currentUser.role,
+        roleLabel:
+          currentUser.role === "manager" ? "Manager" : "Sales Executive",
+      }}
       displayName={currentUser.displayName}
-      initialVisits={demoVisits}
-      customers={customers}
-      salesExecutives={salesExecutives}
-      demoToday={DEMO_TODAY}
+      result={result}
     />
   );
 }

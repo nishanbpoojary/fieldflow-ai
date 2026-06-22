@@ -30,6 +30,24 @@ export interface VisitPageContext {
   roleLabel: string;
 }
 
+export interface VisitRecord {
+  id: string;
+  customerName: string;
+  territory: string;
+  assignedSalesExecutive: string;
+  scheduledDate: string;
+  scheduledTime: string;
+  status: VisitStatus;
+  priority: VisitPriority;
+  planningNote: string | null;
+  outcome: string | null;
+  notes: string | null;
+}
+
+export type VisitWorkspaceResult =
+  | { status: "ready"; visits: VisitRecord[]; today: string }
+  | { status: "unavailable"; today: string };
+
 export interface NewVisitInput {
   customerId: string;
   assignedSalesExecutive: string;
