@@ -20,12 +20,19 @@ interface ExecutiveVisitsChartProps {
 }
 
 export function ExecutiveVisitsChart({ data }: ExecutiveVisitsChartProps) {
+  const accessibleLabel = `Bar chart comparing planned and completed weekly visits by sales executive: ${data
+    .map(
+      (item) =>
+        `${item.label}, ${item.plannedVisits} planned and ${item.completedVisits} completed`,
+    )
+    .join("; ")}`;
+
   return (
     <ChartCard
       title="Visits by executive"
       description="Planned and completed visits for each sales executive this week."
     >
-      <ChartViewport accessibleLabel="Bar chart comparing planned and completed visits for Maya, Arjun, Leena, and Daniel">
+      <ChartViewport accessibleLabel={accessibleLabel}>
           <BarChart
             accessibilityLayer
             data={data}

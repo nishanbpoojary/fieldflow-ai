@@ -1,6 +1,8 @@
 import { SectionHeading } from "@/features/dashboard/components/section-heading";
-import { managerPriorities } from "@/features/dashboard/data/demo-dashboard";
-import type { PriorityTone } from "@/features/dashboard/types";
+import type {
+  ManagerPriority,
+  PriorityTone,
+} from "@/features/dashboard/types";
 
 const priorityStyles: Record<PriorityTone, { number: string; border: string }> = {
   critical: {
@@ -17,7 +19,11 @@ const priorityStyles: Record<PriorityTone, { number: string; border: string }> =
   },
 };
 
-export function ManagerPriorities() {
+interface ManagerPrioritiesProps {
+  priorities: ManagerPriority[];
+}
+
+export function ManagerPriorities({ priorities }: ManagerPrioritiesProps) {
   return (
     <section
       aria-labelledby="manager-priorities-title"
@@ -27,12 +33,12 @@ export function ManagerPriorities() {
         <SectionHeading
           eyebrow="Operational focus"
           title="Manager priorities"
-          description="Suggested actions based only on this page's demo metrics."
+          description="Suggested actions derived from current team records."
         />
       </div>
 
       <ol className="mt-5 space-y-3">
-        {managerPriorities.map((priority, index) => {
+        {priorities.map((priority, index) => {
           const styles = priorityStyles[priority.tone];
 
           return (

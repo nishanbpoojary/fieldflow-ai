@@ -3,15 +3,15 @@ import { CustomerStatusChart } from "@/features/dashboard/components/charts/cust
 import { ExecutiveVisitsChart } from "@/features/dashboard/components/charts/executive-visits-chart";
 import { TerritoryVisitsChart } from "@/features/dashboard/components/charts/territory-visits-chart";
 import type {
+  CompletionTrendChartPoint,
   CustomerStatusChartPoint,
-  MonthlyCompletionChartPoint,
   VisitComparisonChartPoint,
 } from "@/features/dashboard/types";
 
 interface ManagerAnalyticsChartsProps {
   executiveData: VisitComparisonChartPoint[];
   territoryData: VisitComparisonChartPoint[];
-  completionData: MonthlyCompletionChartPoint[];
+  completionData: CompletionTrendChartPoint[];
   customerStatusData: CustomerStatusChartPoint[];
 }
 
@@ -40,7 +40,7 @@ export function ManagerAnalyticsCharts({
           Team and customer trends
         </h2>
         <p className="mt-1 text-sm leading-6 text-slate-500">
-          Static demo analytics for weekly execution and customer coverage.
+          Live synthetic analytics for weekly execution and customer coverage.
         </p>
       </div>
 
@@ -57,7 +57,7 @@ export function ManagerAnalyticsCharts({
             Analytics data is unavailable
           </h3>
           <p className="mt-2 text-sm text-slate-500">
-            Chart cards will appear when manager demo data is available.
+            Chart cards will appear when manager records are available.
           </p>
         </div>
       )}

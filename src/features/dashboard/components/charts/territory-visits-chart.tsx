@@ -20,12 +20,19 @@ interface TerritoryVisitsChartProps {
 }
 
 export function TerritoryVisitsChart({ data }: TerritoryVisitsChartProps) {
+  const accessibleLabel = `Bar chart comparing planned and completed weekly visits by territory: ${data
+    .map(
+      (item) =>
+        `${item.label}, ${item.plannedVisits} planned and ${item.completedVisits} completed`,
+    )
+    .join("; ")}`;
+
   return (
     <ChartCard
       title="Visits by territory"
-      description="Weekly execution levels across the four active sales territories."
+      description="Weekly execution levels across the team's sales territories."
     >
-      <ChartViewport accessibleLabel="Bar chart comparing planned and completed visits across Metro North, West Ridge, Central Market, and South District">
+      <ChartViewport accessibleLabel={accessibleLabel}>
           <BarChart
             accessibilityLayer
             data={data}
