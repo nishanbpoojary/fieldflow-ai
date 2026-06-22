@@ -27,6 +27,7 @@ const filters: Array<{ value: TaskFilter; label: string }> = [
 
 export function TaskWorkflow({ context, tasks }: TaskWorkflowProps) {
   const [activeFilter, setActiveFilter] = useState<TaskFilter>("all");
+  const [successMessage, setSuccessMessage] = useState("");
   const counts = useMemo<Record<TaskStatus, number>>(
     () => ({
       overdue: tasks.filter((task) => task.status === "overdue").length,
@@ -47,6 +48,15 @@ export function TaskWorkflow({ context, tasks }: TaskWorkflowProps) {
 
   return (
     <div className="space-y-6">
+      {successMessage ? (
+        <div
+          role="status"
+          className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800"
+        >
+          {successMessage}
+        </div>
+      ) : null}
+
       <TaskSummary counts={counts} />
 
       <nav aria-label="Filter task queue" className="flex flex-wrap gap-2">
@@ -75,6 +85,11 @@ export function TaskWorkflow({ context, tasks }: TaskWorkflowProps) {
         role={context.role}
         tasks={visibleTasks}
         hasAuthorizedTasks={tasks.length > 0}
+        onTaskCompleted={() =>
+          setSuccessMessage(
+            "Task completed. The live queue, summary, and completion details have been refreshed.",
+          )
+        }
       />
     </div>
   );

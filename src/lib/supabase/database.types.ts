@@ -627,6 +627,13 @@ export type Database = {
           follow_up_id: string
         }[]
       }
+      complete_assigned_task: {
+        Args: { p_completion_note: string; p_task_id: string }
+        Returns: {
+          completed_at: string
+          task_id: string
+        }[]
+      }
       complete_assigned_visit_plan: {
         Args: {
           p_next_follow_up_action?: string

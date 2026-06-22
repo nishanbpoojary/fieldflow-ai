@@ -62,13 +62,17 @@ export function TaskPageShell({
             </p>
           </header>
 
-          <aside
-            className="my-6 rounded-xl border border-blue-100 bg-blue-50/70 px-4 py-3 text-sm leading-6 text-blue-900"
-            aria-label="Read-only task workspace notice"
-          >
-            Live task actions arrive in the next step. This workspace is
-            read-only.
-          </aside>
+          <div className="my-6">
+            {isManager ? (
+              <aside
+                className="rounded-xl border border-blue-100 bg-blue-50/70 px-4 py-3 text-sm leading-6 text-blue-900"
+                aria-label="Manager task workspace notice"
+              >
+                Manager task actions are not included yet. This workspace
+                remains read-only.
+              </aside>
+            ) : null}
+          </div>
 
           {result.status === "ready" ? (
             <TaskWorkflow context={context} tasks={result.tasks} />
