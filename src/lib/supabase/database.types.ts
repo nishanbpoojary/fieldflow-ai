@@ -620,6 +620,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      complete_assigned_follow_up: {
+        Args: { p_completion_note: string; p_follow_up_id: string }
+        Returns: {
+          completed_at: string
+          follow_up_id: string
+        }[]
+      }
       complete_assigned_visit_plan: {
         Args: {
           p_next_follow_up_action?: string

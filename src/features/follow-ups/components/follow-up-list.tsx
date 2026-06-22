@@ -1,4 +1,5 @@
 import type { AppRole } from "@/features/dashboard/types";
+import { CompleteFollowUpAction } from "@/features/follow-ups/components/complete-follow-up-action";
 import type {
   FollowUpPriority,
   FollowUpRecord,
@@ -9,6 +10,7 @@ interface FollowUpListProps {
   role: AppRole;
   followUps: FollowUpRecord[];
   hasAuthorizedFollowUps: boolean;
+  onFollowUpCompleted: () => void;
 }
 
 const statusGroups: Array<{ status: FollowUpStatus; label: string }> = [
@@ -47,6 +49,8 @@ function formatCompletedAt(timestamp: string) {
     month: "short",
     day: "numeric",
     year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
     timeZone: "Asia/Kolkata",
   }).format(new Date(timestamp));
 }
@@ -55,6 +59,7 @@ export function FollowUpList({
   role,
   followUps,
   hasAuthorizedFollowUps,
+  onFollowUpCompleted,
 }: FollowUpListProps) {
   return (
     <section
@@ -154,6 +159,13 @@ export function FollowUpList({
                             {followUp.completionNote}
                           </p>
                         ) : null}
+
+                        <CompleteFollowUpAction
+                          followUpId={followUp.id}
+                          state={followUp.state}
+                          isSalesExecutive={role === "sales_executive"}
+                          onSuccess={onFollowUpCompleted}
+                        />
                       </article>
                     </li>
                   ))}
