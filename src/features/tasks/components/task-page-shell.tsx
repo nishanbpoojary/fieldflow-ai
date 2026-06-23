@@ -1,4 +1,5 @@
 import { AppSidebar } from "@/features/dashboard/components/app-sidebar";
+import { CreateTaskAction } from "@/features/tasks/components/create-task-action";
 import { TaskWorkflow } from "@/features/tasks/components/task-workflow";
 import type {
   TaskPageContext,
@@ -62,20 +63,15 @@ export function TaskPageShell({
             </p>
           </header>
 
-          <div className="my-6">
-            {isManager ? (
-              <aside
-                className="rounded-xl border border-blue-100 bg-blue-50/70 px-4 py-3 text-sm leading-6 text-blue-900"
-                aria-label="Manager task workspace notice"
-              >
-                Manager task actions are not included yet. This workspace
-                remains read-only.
-              </aside>
-            ) : null}
-          </div>
-
           {result.status === "ready" ? (
-            <TaskWorkflow context={context} tasks={result.tasks} />
+            <div className="mt-6 space-y-6">
+              <CreateTaskAction
+                isManager={isManager}
+                options={result.creationOptions}
+                defaultDate={result.today}
+              />
+              <TaskWorkflow context={context} tasks={result.tasks} />
+            </div>
           ) : (
             <section
               className="rounded-2xl border border-amber-200 bg-white p-8 text-center shadow-sm shadow-slate-200/60"

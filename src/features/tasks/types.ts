@@ -29,6 +29,27 @@ export interface TaskPageContext {
   roleLabel: string;
 }
 
+export interface TaskCustomerOption {
+  id: string;
+  companyName: string;
+  territory: string;
+}
+
+export interface TaskSalesExecutiveOption {
+  id: string;
+  displayName: string;
+}
+
+export interface TaskCreationOptions {
+  customers: TaskCustomerOption[];
+  salesExecutives: TaskSalesExecutiveOption[];
+}
+
 export type TaskWorkspaceResult =
-  | { status: "ready"; tasks: TaskRecord[]; today: string }
+  | {
+      status: "ready";
+      tasks: TaskRecord[];
+      today: string;
+      creationOptions: TaskCreationOptions | null;
+    }
   | { status: "unavailable"; today: string };
