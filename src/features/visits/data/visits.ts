@@ -4,6 +4,7 @@ import type { CurrentUser } from "@/lib/auth/current-user";
 import type { Database } from "@/lib/supabase/database.types";
 import { createClient } from "@/lib/supabase/server";
 import type {
+  VisitPlanningOptions,
   VisitPriority,
   VisitRecord,
   VisitStatus,
@@ -21,6 +22,8 @@ type VisitPlanRow = Pick<
   | "priority"
   | "planning_note"
 >;
+
+type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>;
 
 const visitPlanFields =
   "id, customer_id, assigned_sales_executive_id, scheduled_date, scheduled_time, status, priority, planning_note" as const;
@@ -79,6 +82,71 @@ function mapStatus(
   return status;
 }
 
+async function getManagerVisitPlanningOptions(
+  supabase: SupabaseServerClient,
+  currentUser: CurrentUser,
+): Promise<VisitPlanningOptions | null> {
+  if (currentUser.role !== "manager") {
+    return null;
+  }
+
+  const [customersResult, salesExecutivesResult] = await Promise.all([
+    supabase
+      .from("customers")
+      .select("id, company_name, territory_id")
+      .eq("team_id", currentUser.teamId)
+      .order("company_name", { ascending: true }),
+    supabase
+      .from("profiles")
+      .select("id, display_name")
+      .eq("team_id", currentUser.teamId)
+      .eq("role", "sales_executive")
+      .order("display_name", { ascending: true }),
+  ]);
+
+  if (customersResult.error || salesExecutivesResult.error) {
+    return null;
+  }
+
+  const territoryIds = unique(
+    customersResult.data.map((customer) => customer.territory_id),
+  );
+
+  let territoryById = new Map<string, string>();
+
+  if (territoryIds.length > 0) {
+    const territoriesResult = await supabase
+      .from("territories")
+      .select("id, name")
+      .eq("team_id", currentUser.teamId)
+      .in("id", territoryIds);
+
+    if (territoriesResult.error) {
+      return null;
+    }
+
+    territoryById = new Map(
+      territoriesResult.data.map((territory) => [
+        territory.id,
+        territory.name,
+      ]),
+    );
+  }
+
+  return {
+    customers: customersResult.data.map((customer) => ({
+      id: customer.id,
+      companyName: customer.company_name,
+      territory:
+        territoryById.get(customer.territory_id) ?? "Territory unavailable",
+    })),
+    salesExecutives: salesExecutivesResult.data.map((profile) => ({
+      id: profile.id,
+      displayName: profile.display_name,
+    })),
+  };
+}
+
 export async function getVisitWorkspace(
   currentUser: CurrentUser,
 ): Promise<VisitWorkspaceResult> {
@@ -86,6 +154,15 @@ export async function getVisitWorkspace(
 
   try {
     const supabase = await createClient();
+    const planningOptions = await getManagerVisitPlanningOptions(
+      supabase,
+      currentUser,
+    );
+
+    if (currentUser.role === "manager" && planningOptions === null) {
+      return { status: "unavailable", today };
+    }
+
     let visitPlansQuery = supabase
       .from("visit_plans")
       .select(visitPlanFields)
@@ -107,7 +184,7 @@ export async function getVisitWorkspace(
     const visitPlans: VisitPlanRow[] = visitPlansResult.data;
 
     if (visitPlans.length === 0) {
-      return { status: "ready", visits: [], today };
+      return { status: "ready", visits: [], today, planningOptions };
     }
 
     const customerIds = unique(visitPlans.map((plan) => plan.customer_id));
@@ -230,7 +307,12 @@ export async function getVisitWorkspace(
       };
     });
 
-    return { status: "ready", visits: sortVisits(visits, today), today };
+    return {
+      status: "ready",
+      visits: sortVisits(visits, today),
+      today,
+      planningOptions,
+    };
   } catch {
     return { status: "unavailable", today };
   }

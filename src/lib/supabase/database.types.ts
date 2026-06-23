@@ -647,6 +647,20 @@ export type Database = {
           visit_plan_id: string
         }[]
       }
+      create_assigned_visit_plan: {
+        Args: {
+          p_assigned_sales_executive_id: string
+          p_customer_id: string
+          p_planning_note?: string
+          p_priority?: Database["public"]["Enums"]["priority_level"]
+          p_scheduled_date: string
+          p_scheduled_time: string
+        }
+        Returns: {
+          created_at: string
+          visit_plan_id: string
+        }[]
+      }
       current_user_is_manager: { Args: never; Returns: boolean }
       current_user_is_manager_for_team: {
         Args: { target_team_id: string }

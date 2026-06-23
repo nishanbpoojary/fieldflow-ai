@@ -1,4 +1,5 @@
 import { AppSidebar } from "@/features/dashboard/components/app-sidebar";
+import { PlanVisitAction } from "@/features/visits/components/plan-visit-action";
 import { VisitWorkflow } from "@/features/visits/components/visit-workflow";
 import type {
   VisitPageContext,
@@ -62,20 +63,19 @@ export function VisitPageShell({
             </p>
           </header>
 
-          <div className="my-6">
-            {isManager ? (
-              <aside className="rounded-xl border border-blue-100 bg-blue-50/70 px-4 py-3 text-sm leading-6 text-blue-900" aria-label="Manager workspace notice">
-                Manager planning and completion actions are not included yet. This workspace remains read-only.
-              </aside>
-            ) : null}
-          </div>
-
           {result.status === "ready" ? (
-            <VisitWorkflow
-              context={context}
-              visits={result.visits}
-              today={result.today}
-            />
+            <div className="mt-6 space-y-6">
+              <PlanVisitAction
+                isManager={isManager}
+                options={result.planningOptions}
+                defaultDate={result.today}
+              />
+              <VisitWorkflow
+                context={context}
+                visits={result.visits}
+                today={result.today}
+              />
+            </div>
           ) : (
             <section className="rounded-2xl border border-amber-200 bg-white p-8 text-center shadow-sm shadow-slate-200/60" role="status">
               <p className="text-sm font-semibold text-slate-900">
