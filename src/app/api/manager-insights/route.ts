@@ -1,3 +1,4 @@
+import { generateGeminiManagerInsights } from "@/features/dashboard/data/gemini-manager-insights";
 import { generateManagerInsights } from "@/features/dashboard/data/manager-insights";
 import { getManagerDashboardData } from "@/features/dashboard/data/manager-dashboard";
 import { getCurrentUser } from "@/lib/auth/current-user";
@@ -23,12 +24,19 @@ export async function POST() {
 
   if (dashboardResult.status === "empty") {
     return Response.json({
-      sourceLabel: "Rules-based insight",
+      source: "rules",
+      sourceLabel: "Rules-based fallback",
       periodLabel: dashboardResult.periodLabel,
       generatedFor: dashboardResult.today,
       insights: [],
     });
   }
 
-  return Response.json(generateManagerInsights(dashboardResult.data));
+  const geminiInsights = await generateGeminiManagerInsights(
+    dashboardResult.data,
+  );
+
+  return Response.json(
+    geminiInsights ?? generateManagerInsights(dashboardResult.data),
+  );
 }
