@@ -3,6 +3,7 @@ import { KpiCard } from "@/features/dashboard/components/kpi-card";
 import { ManagerAnalyticsCharts } from "@/features/dashboard/components/manager-analytics-charts";
 import { ManagerInsightsPanel } from "@/features/dashboard/components/manager-insights-panel";
 import { ManagerPriorities } from "@/features/dashboard/components/manager-priorities";
+import { ManagerWeeklyReportPanel } from "@/features/dashboard/components/manager-weekly-report-panel";
 import { OverdueFollowUps } from "@/features/dashboard/components/overdue-follow-ups";
 import { TeamPerformance } from "@/features/dashboard/components/team-performance";
 import type { ManagerDashboardResult } from "@/features/dashboard/types";
@@ -153,6 +154,7 @@ export function ManagerDashboard({
                     priorities={result.data.managerPriorities}
                   />
                   <ManagerInsightsPanel />
+                  <ManagerWeeklyReportPanel />
                 </div>
               </div>
 
