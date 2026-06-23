@@ -3,9 +3,9 @@
 import { useState } from "react";
 
 import { SectionHeading } from "@/features/dashboard/components/section-heading";
+import { buildManagerWeeklyReportMarkdown } from "@/features/dashboard/data/manager-weekly-report-rules";
 import type {
   ManagerInsightPriority,
-  ManagerWeeklyReport,
   ManagerWeeklyReportPayload,
 } from "@/features/dashboard/types";
 
@@ -40,52 +40,6 @@ const priorityStyles: Record<
   },
 };
 
-function buildMarkdownReport(
-  report: ManagerWeeklyReport,
-  periodLabel: string,
-  generatedFor: string,
-  sourceLabel: string,
-) {
-  const wins =
-    report.wins.length > 0
-      ? report.wins.map((win) => `- ${win}`).join("\n")
-      : "- No wins were highlighted for this reporting period.";
-  const risks = report.risks
-    .map(
-      (risk) =>
-        `- ${risk.title} (${risk.priority})\n  - Evidence: ${risk.detail}\n  - Recommended action: ${risk.recommendedAction}`,
-    )
-    .join("\n");
-  const nextWeekPlan = report.nextWeekPlan
-    .map((planItem) => `- ${planItem}`)
-    .join("\n");
-
-  return [
-    `# ${report.title}`,
-    "",
-    `Period: ${periodLabel}`,
-    `Generated for: ${generatedFor}`,
-    `Source: ${sourceLabel}`,
-    "",
-    "## Summary",
-    "",
-    report.summary,
-    "",
-    "## Wins",
-    "",
-    wins,
-    "",
-    "## Risks",
-    "",
-    risks,
-    "",
-    "## Next-week plan",
-    "",
-    nextWeekPlan,
-    "",
-  ].join("\n");
-}
-
 export function ManagerWeeklyReportPanel() {
   const [state, setState] = useState<ReportState>({ status: "idle" });
 
@@ -115,12 +69,12 @@ export function ManagerWeeklyReportPanel() {
   async function handleCopyReport() {
     if (state.status !== "ready" || !state.payload.report) return;
 
-    const markdown = buildMarkdownReport(
-      state.payload.report,
-      state.payload.periodLabel,
-      state.payload.generatedFor,
-      state.payload.sourceLabel,
-    );
+    const markdown = buildManagerWeeklyReportMarkdown({
+      report: state.payload.report,
+      periodLabel: state.payload.periodLabel,
+      generatedFor: state.payload.generatedFor,
+      sourceLabel: state.payload.sourceLabel,
+    });
 
     try {
       await navigator.clipboard.writeText(markdown);
@@ -139,12 +93,12 @@ export function ManagerWeeklyReportPanel() {
   function handleDownloadReport() {
     if (state.status !== "ready" || !state.payload.report) return;
 
-    const markdown = buildMarkdownReport(
-      state.payload.report,
-      state.payload.periodLabel,
-      state.payload.generatedFor,
-      state.payload.sourceLabel,
-    );
+    const markdown = buildManagerWeeklyReportMarkdown({
+      report: state.payload.report,
+      periodLabel: state.payload.periodLabel,
+      generatedFor: state.payload.generatedFor,
+      sourceLabel: state.payload.sourceLabel,
+    });
     const blob = new Blob([markdown], { type: "text/markdown;charset=utf-8" });
     const objectUrl = URL.createObjectURL(blob);
     const link = document.createElement("a");
