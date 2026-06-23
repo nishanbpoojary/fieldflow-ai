@@ -14,6 +14,22 @@ export interface FollowUpPageContext {
   roleLabel: string;
 }
 
+export interface FollowUpCustomerOption {
+  id: string;
+  companyName: string;
+  territory: string;
+}
+
+export interface FollowUpSalesExecutiveOption {
+  id: string;
+  displayName: string;
+}
+
+export interface FollowUpCreationOptions {
+  customers: FollowUpCustomerOption[];
+  salesExecutives: FollowUpSalesExecutiveOption[];
+}
+
 export type FollowUpState = "open" | "completed" | "cancelled";
 
 export interface FollowUpRecord {
@@ -32,5 +48,10 @@ export interface FollowUpRecord {
 }
 
 export type FollowUpWorkspaceResult =
-  | { status: "ready"; followUps: FollowUpRecord[]; today: string }
+  | {
+      status: "ready";
+      followUps: FollowUpRecord[];
+      today: string;
+      creationOptions: FollowUpCreationOptions | null;
+    }
   | { status: "unavailable"; today: string };

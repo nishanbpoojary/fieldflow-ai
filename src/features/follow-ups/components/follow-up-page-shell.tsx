@@ -1,4 +1,5 @@
 import { AppSidebar } from "@/features/dashboard/components/app-sidebar";
+import { CreateFollowUpAction } from "@/features/follow-ups/components/create-follow-up-action";
 import { FollowUpWorkflow } from "@/features/follow-ups/components/follow-up-workflow";
 import type {
   FollowUpPageContext,
@@ -62,22 +63,18 @@ export function FollowUpPageShell({
             </p>
           </header>
 
-          <div className="my-6">
-            {isManager ? (
-              <aside
-                className="rounded-xl border border-blue-100 bg-blue-50/70 px-4 py-3 text-sm leading-6 text-blue-900"
-                aria-label="Manager workspace notice"
-              >
-                Manager follow-up actions are not included yet. This workspace remains read-only.
-              </aside>
-            ) : null}
-          </div>
-
           {result.status === "ready" ? (
-            <FollowUpWorkflow
-              context={context}
-              followUps={result.followUps}
-            />
+            <div className="mt-6 space-y-6">
+              <CreateFollowUpAction
+                isManager={isManager}
+                options={result.creationOptions}
+                defaultDate={result.today}
+              />
+              <FollowUpWorkflow
+                context={context}
+                followUps={result.followUps}
+              />
+            </div>
           ) : (
             <section
               className="rounded-2xl border border-amber-200 bg-white p-8 text-center shadow-sm shadow-slate-200/60"

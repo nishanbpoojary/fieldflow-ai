@@ -4,6 +4,7 @@ import type { CurrentUser } from "@/lib/auth/current-user";
 import type { Database } from "@/lib/supabase/database.types";
 import { createClient } from "@/lib/supabase/server";
 import type {
+  FollowUpCreationOptions,
   FollowUpRecord,
   FollowUpStatus,
   FollowUpWorkspaceResult,
@@ -22,6 +23,8 @@ type FollowUpRow = Pick<
   | "completion_note"
   | "completed_at"
 >;
+
+type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>;
 
 const followUpFields =
   "id, customer_id, assigned_sales_executive_id, title, due_date, priority, state, planning_note, completion_note, completed_at" as const;
@@ -68,6 +71,71 @@ function sortFollowUps(followUps: FollowUpRecord[]) {
   });
 }
 
+async function getManagerFollowUpCreationOptions(
+  supabase: SupabaseServerClient,
+  currentUser: CurrentUser,
+): Promise<FollowUpCreationOptions | null> {
+  if (currentUser.role !== "manager") {
+    return null;
+  }
+
+  const [customersResult, salesExecutivesResult] = await Promise.all([
+    supabase
+      .from("customers")
+      .select("id, company_name, territory_id")
+      .eq("team_id", currentUser.teamId)
+      .order("company_name", { ascending: true }),
+    supabase
+      .from("profiles")
+      .select("id, display_name")
+      .eq("team_id", currentUser.teamId)
+      .eq("role", "sales_executive")
+      .order("display_name", { ascending: true }),
+  ]);
+
+  if (customersResult.error || salesExecutivesResult.error) {
+    return null;
+  }
+
+  const territoryIds = unique(
+    customersResult.data.map((customer) => customer.territory_id),
+  );
+
+  let territoryById = new Map<string, string>();
+
+  if (territoryIds.length > 0) {
+    const territoriesResult = await supabase
+      .from("territories")
+      .select("id, name")
+      .eq("team_id", currentUser.teamId)
+      .in("id", territoryIds);
+
+    if (territoriesResult.error) {
+      return null;
+    }
+
+    territoryById = new Map(
+      territoriesResult.data.map((territory) => [
+        territory.id,
+        territory.name,
+      ]),
+    );
+  }
+
+  return {
+    customers: customersResult.data.map((customer) => ({
+      id: customer.id,
+      companyName: customer.company_name,
+      territory:
+        territoryById.get(customer.territory_id) ?? "Territory unavailable",
+    })),
+    salesExecutives: salesExecutivesResult.data.map((profile) => ({
+      id: profile.id,
+      displayName: profile.display_name,
+    })),
+  };
+}
+
 export async function getFollowUpWorkspace(
   currentUser: CurrentUser,
 ): Promise<FollowUpWorkspaceResult> {
@@ -75,6 +143,15 @@ export async function getFollowUpWorkspace(
 
   try {
     const supabase = await createClient();
+    const creationOptions = await getManagerFollowUpCreationOptions(
+      supabase,
+      currentUser,
+    );
+
+    if (currentUser.role === "manager" && creationOptions === null) {
+      return { status: "unavailable", today };
+    }
+
     let followUpsQuery = supabase
       .from("follow_ups")
       .select(followUpFields)
@@ -96,7 +173,7 @@ export async function getFollowUpWorkspace(
     const followUps: FollowUpRow[] = followUpsResult.data;
 
     if (followUps.length === 0) {
-      return { status: "ready", followUps: [], today };
+      return { status: "ready", followUps: [], today, creationOptions };
     }
 
     const customerIds = unique(followUps.map((followUp) => followUp.customer_id));
@@ -192,6 +269,7 @@ export async function getFollowUpWorkspace(
       status: "ready",
       followUps: sortFollowUps(records),
       today,
+      creationOptions,
     };
   } catch {
     return { status: "unavailable", today };
