@@ -10,7 +10,13 @@ import type { AppRole } from "@/features/dashboard/types";
 interface AppSidebarProps {
   role: AppRole;
   displayName: string;
-  activeItem?: "overview" | "customers" | "visits" | "follow-ups" | "tasks";
+  activeItem?:
+    | "overview"
+    | "customers"
+    | "visits"
+    | "follow-ups"
+    | "tasks"
+    | "team-performance";
 }
 
 const roleProfiles: Record<
@@ -73,6 +79,7 @@ export function AppSidebar({
               item.label === "Visits" || item.label === "Today's Visits";
             const isFollowUpItem = item.label === "Follow-ups";
             const isTaskItem = item.label === "Tasks";
+            const isTeamPerformanceItem = item.label === "Team Performance";
             const isActive =
               activeItem === "customers"
                 ? isCustomerItem
@@ -82,7 +89,9 @@ export function AppSidebar({
                     ? isFollowUpItem
                     : activeItem === "tasks"
                       ? isTaskItem
-                      : item.active;
+                      : activeItem === "team-performance"
+                        ? isTeamPerformanceItem
+                        : item.active;
             const itemHref = isOverviewItem
               ? "/"
               : isCustomerItem
@@ -91,7 +100,9 @@ export function AppSidebar({
                   ? "/visits"
                   : isFollowUpItem
                     ? "/follow-ups"
-                    : "/tasks";
+                    : isTaskItem
+                      ? "/tasks"
+                      : "/team-performance";
             const itemDestination = isOverviewItem
               ? "dashboard"
               : isCustomerItem
@@ -100,7 +111,9 @@ export function AppSidebar({
                   ? "planner"
                   : isFollowUpItem
                     ? "tracker"
-                    : "board";
+                    : isTaskItem
+                      ? "board"
+                      : "workspace";
             const itemClassName = `flex min-h-10 items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium lg:min-h-11 ${
               isActive
                 ? "bg-blue-600 text-white shadow-sm shadow-blue-950/40"
@@ -130,7 +143,8 @@ export function AppSidebar({
                 isCustomerItem ||
                 isVisitItem ||
                 isFollowUpItem ||
-                isTaskItem ? (
+                isTaskItem ||
+                isTeamPerformanceItem ? (
                   <Link
                     href={itemHref}
                     aria-current={isActive ? "page" : undefined}
