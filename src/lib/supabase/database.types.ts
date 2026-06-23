@@ -661,6 +661,20 @@ export type Database = {
           follow_up_id: string
         }[]
       }
+      create_assigned_task: {
+        Args: {
+          p_assigned_sales_executive_id: string
+          p_due_date: string
+          p_planning_note?: string
+          p_priority?: Database["public"]["Enums"]["priority_level"]
+          p_related_customer_id?: string
+          p_title: string
+        }
+        Returns: {
+          created_at: string
+          task_id: string
+        }[]
+      }
       create_assigned_visit_plan: {
         Args: {
           p_assigned_sales_executive_id: string
