@@ -32,6 +32,22 @@ export interface TeamPerformanceMember {
 }
 
 export type PriorityTone = "critical" | "attention" | "opportunity";
+export type ManagerInsightPriority = "high" | "medium" | "low";
+
+export interface ManagerInsight {
+  id: string;
+  priority: ManagerInsightPriority;
+  title: string;
+  evidence: string;
+  recommendedAction: string;
+}
+
+export interface ManagerInsightsPayload {
+  sourceLabel: "Rules-based insight";
+  periodLabel: string;
+  generatedFor: string;
+  insights: ManagerInsight[];
+}
 
 export interface ManagerPriority {
   id: string;
