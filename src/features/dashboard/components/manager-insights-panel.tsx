@@ -69,13 +69,13 @@ export function ManagerInsightsPanel() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div id="manager-insights-title">
           <SectionHeading
-            eyebrow="Demo decision support"
+            eyebrow="On-demand decision support"
             title="Manager insights"
-            description="Generate deterministic, rules-based recommendations from the current authorized dashboard data."
+            description="Generate recommendations from the current authorized dashboard data with Gemini when available and a deterministic fallback when it is not."
           />
           <p className="mt-2 text-xs leading-5 text-slate-500">
-            This panel does not call Gemini yet. Results are generated only when
-            you click the button.
+            Results are generated only when you click the button and are not
+            stored yet.
           </p>
         </div>
 
@@ -96,8 +96,8 @@ export function ManagerInsightsPanel() {
               No insights generated yet
             </p>
             <p className="mx-auto mt-1 max-w-xl text-sm leading-6 text-slate-500">
-              Generate insights when you want a fresh rules-based read of the
-              live Manager dashboard.
+              Generate insights when you want a fresh read of the live Manager
+              dashboard.
             </p>
           </div>
         ) : null}
@@ -111,8 +111,8 @@ export function ManagerInsightsPanel() {
               Reviewing current team records...
             </p>
             <p className="mt-1 text-sm leading-6 text-blue-800/80">
-              The fallback rules engine is checking overdue work, visit
-              completion, targets, customer status, and team gaps.
+              The server is checking overdue work, visit completion, targets,
+              customer status, and team gaps.
             </p>
           </div>
         ) : null}
@@ -133,17 +133,23 @@ export function ManagerInsightsPanel() {
         ) : null}
 
         {state.status === "ready" ? (
-          state.payload.insights.length > 0 ? (
-            <div>
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.14em] text-slate-600">
-                  {state.payload.sourceLabel}
-                </span>
-                <span className="text-xs font-medium text-slate-400">
-                  {state.payload.periodLabel}
-                </span>
-              </div>
+          <div>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.14em] text-slate-600">
+                {state.payload.sourceLabel}
+              </span>
+              <span className="text-xs font-medium text-slate-400">
+                {state.payload.periodLabel}
+              </span>
+            </div>
+            {state.payload.source === "rules" ? (
+              <p className="mt-2 text-xs leading-5 text-slate-500">
+                Gemini was unavailable, so deterministic dashboard insights are
+                shown.
+              </p>
+            ) : null}
 
+            {state.payload.insights.length > 0 ? (
               <ul className="mt-4 space-y-3">
                 {state.payload.insights.map((insight) => {
                   const styles = priorityStyles[insight.priority];
@@ -176,18 +182,18 @@ export function ManagerInsightsPanel() {
                   );
                 })}
               </ul>
-            </div>
-          ) : (
-            <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-center">
-              <p className="text-sm font-semibold text-slate-800">
-                No insight cards available
-              </p>
-              <p className="mx-auto mt-1 max-w-xl text-sm leading-6 text-slate-500">
-                There are not enough authorized operational records to produce
-                rules-based recommendations yet.
-              </p>
-            </div>
-          )
+            ) : (
+              <div className="mt-4 rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-center">
+                <p className="text-sm font-semibold text-slate-800">
+                  No insight cards available
+                </p>
+                <p className="mx-auto mt-1 max-w-xl text-sm leading-6 text-slate-500">
+                  There are not enough authorized operational records to produce
+                  recommendations yet.
+                </p>
+              </div>
+            )}
+          </div>
         ) : null}
       </div>
     </section>

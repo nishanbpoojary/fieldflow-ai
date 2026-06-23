@@ -33,6 +33,7 @@ export interface TeamPerformanceMember {
 
 export type PriorityTone = "critical" | "attention" | "opportunity";
 export type ManagerInsightPriority = "high" | "medium" | "low";
+export type ManagerInsightSource = "gemini" | "rules";
 
 export interface ManagerInsight {
   id: string;
@@ -43,7 +44,8 @@ export interface ManagerInsight {
 }
 
 export interface ManagerInsightsPayload {
-  sourceLabel: "Rules-based insight";
+  source: ManagerInsightSource;
+  sourceLabel: "Gemini-generated insight" | "Rules-based fallback";
   periodLabel: string;
   generatedFor: string;
   insights: ManagerInsight[];

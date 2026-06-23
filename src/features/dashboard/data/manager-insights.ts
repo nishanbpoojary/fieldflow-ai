@@ -173,7 +173,8 @@ export function generateManagerInsights(
   }
 
   return {
-    sourceLabel: "Rules-based insight",
+    source: "rules",
+    sourceLabel: "Rules-based fallback",
     periodLabel: data.periodLabel,
     generatedFor: data.today,
     insights: insights.slice(0, 5),
