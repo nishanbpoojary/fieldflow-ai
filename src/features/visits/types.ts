@@ -25,6 +25,22 @@ export interface VisitCustomerOption {
   assignedSalesExecutive: string;
 }
 
+export interface VisitPlanCustomerOption {
+  id: string;
+  companyName: string;
+  territory: string;
+}
+
+export interface VisitPlanSalesExecutiveOption {
+  id: string;
+  displayName: string;
+}
+
+export interface VisitPlanningOptions {
+  customers: VisitPlanCustomerOption[];
+  salesExecutives: VisitPlanSalesExecutiveOption[];
+}
+
 export interface VisitPageContext {
   role: AppRole;
   roleLabel: string;
@@ -45,7 +61,12 @@ export interface VisitRecord {
 }
 
 export type VisitWorkspaceResult =
-  | { status: "ready"; visits: VisitRecord[]; today: string }
+  | {
+      status: "ready";
+      visits: VisitRecord[];
+      today: string;
+      planningOptions: VisitPlanningOptions | null;
+    }
   | { status: "unavailable"; today: string };
 
 export interface NewVisitInput {
