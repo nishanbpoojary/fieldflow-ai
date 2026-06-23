@@ -17,7 +17,8 @@ interface AppSidebarProps {
     | "follow-ups"
     | "tasks"
     | "team-performance"
-    | "territories";
+    | "territories"
+    | "my-performance";
 }
 
 const roleProfiles: Record<
@@ -82,6 +83,7 @@ export function AppSidebar({
             const isTaskItem = item.label === "Tasks";
             const isTeamPerformanceItem = item.label === "Team Performance";
             const isTerritoryItem = item.label === "Territories";
+            const isMyPerformanceItem = item.label === "My Performance";
             const isActive =
               activeItem === "customers"
                 ? isCustomerItem
@@ -95,7 +97,9 @@ export function AppSidebar({
                         ? isTeamPerformanceItem
                         : activeItem === "territories"
                           ? isTerritoryItem
-                          : item.active;
+                          : activeItem === "my-performance"
+                            ? isMyPerformanceItem
+                            : item.active;
             const itemHref = isOverviewItem
               ? "/"
               : isCustomerItem
@@ -108,7 +112,9 @@ export function AppSidebar({
                       ? "/tasks"
                       : isTeamPerformanceItem
                         ? "/team-performance"
-                        : "/territories";
+                        : isTerritoryItem
+                          ? "/territories"
+                          : "/my-performance";
             const itemDestination = isOverviewItem
               ? "dashboard"
               : isCustomerItem
@@ -151,7 +157,8 @@ export function AppSidebar({
                 isFollowUpItem ||
                 isTaskItem ||
                 isTeamPerformanceItem ||
-                isTerritoryItem ? (
+                isTerritoryItem ||
+                isMyPerformanceItem ? (
                   <Link
                     href={itemHref}
                     aria-current={isActive ? "page" : undefined}

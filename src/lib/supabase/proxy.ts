@@ -8,6 +8,7 @@ const protectedRoutes = [
   "/visits",
   "/follow-ups",
   "/tasks",
+  "/my-performance",
 ] as const;
 
 function isProtectedRoute(pathname: string) {

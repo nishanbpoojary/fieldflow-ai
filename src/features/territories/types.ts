@@ -40,4 +40,3 @@ export interface TerritoryWorkspaceData {
 export type TerritoryWorkspaceResult =
   | { status: "ready"; data: TerritoryWorkspaceData }
   | { status: "unavailable"; periodLabel: string; today: string };
-
