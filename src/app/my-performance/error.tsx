@@ -1,6 +1,6 @@
 "use client";
 
-export default function TerritoriesError({
+export default function MyPerformanceError({
   unstable_retry,
 }: {
   error: Error & { digest?: string };
@@ -16,7 +16,7 @@ export default function TerritoriesError({
           !
         </span>
         <h1 className="mt-4 text-xl font-semibold tracking-tight text-slate-950">
-          Territories could not load
+          My performance could not load
         </h1>
         <p className="mt-2 text-sm leading-6 text-slate-500">
           Something went wrong while rendering this workspace. Please try again.
@@ -32,3 +32,4 @@ export default function TerritoriesError({
     </main>
   );
 }
+
