@@ -34,6 +34,7 @@ export interface TeamPerformanceMember {
 export type PriorityTone = "critical" | "attention" | "opportunity";
 export type ManagerInsightPriority = "high" | "medium" | "low";
 export type ManagerInsightSource = "gemini" | "rules";
+export type ManagerWeeklyReportSource = "gemini" | "fallback";
 
 export interface ManagerInsight {
   id: string;
@@ -49,6 +50,29 @@ export interface ManagerInsightsPayload {
   periodLabel: string;
   generatedFor: string;
   insights: ManagerInsight[];
+}
+
+export interface ManagerWeeklyReportRisk {
+  priority: ManagerInsightPriority;
+  title: string;
+  detail: string;
+  recommendedAction: string;
+}
+
+export interface ManagerWeeklyReport {
+  title: string;
+  summary: string;
+  wins: string[];
+  risks: ManagerWeeklyReportRisk[];
+  nextWeekPlan: string[];
+}
+
+export interface ManagerWeeklyReportPayload {
+  source: ManagerWeeklyReportSource;
+  sourceLabel: "Gemini-generated weekly report" | "Rules-based fallback";
+  periodLabel: string;
+  generatedFor: string;
+  report: ManagerWeeklyReport | null;
 }
 
 export interface ManagerPriority {
