@@ -44,6 +44,7 @@ export function CreateFollowUpAction({
   const [isOpen, setIsOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isValidationError, setIsValidationError] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
   if (!isManager) {
@@ -57,6 +58,7 @@ export function CreateFollowUpAction({
   function closePanel() {
     if (isSaving) return;
     setErrorMessage("");
+    setIsValidationError(false);
     setIsOpen(false);
   }
 
@@ -85,11 +87,13 @@ export function CreateFollowUpAction({
       setErrorMessage(
         "Select a customer, assignee, due date, priority, and enter a title.",
       );
+      setIsValidationError(true);
       return;
     }
 
     setIsSaving(true);
     setErrorMessage("");
+    setIsValidationError(false);
     setSuccessMessage("");
 
     try {
@@ -104,11 +108,13 @@ export function CreateFollowUpAction({
 
       if (error) {
         setErrorMessage(createFollowUpErrorMessage);
+        setIsValidationError(false);
         setIsSaving(false);
         return;
       }
     } catch {
       setErrorMessage(createFollowUpErrorMessage);
+      setIsValidationError(false);
       setIsSaving(false);
       return;
     }
@@ -148,6 +154,7 @@ export function CreateFollowUpAction({
           type="button"
           onClick={() => {
             setErrorMessage("");
+            setIsValidationError(false);
             setSuccessMessage("");
             setIsOpen((current) => !current);
           }}
@@ -173,6 +180,10 @@ export function CreateFollowUpAction({
               <label className="text-sm font-medium text-slate-700 sm:col-span-2">
                 Customer
                 <select
+                  aria-describedby={
+                    isValidationError ? "create-follow-up-form-error" : undefined
+                  }
+                  aria-invalid={isValidationError || undefined}
                   name="customerId"
                   required
                   defaultValue=""
@@ -192,6 +203,10 @@ export function CreateFollowUpAction({
               <label className="text-sm font-medium text-slate-700 sm:col-span-2">
                 Assigned sales executive
                 <select
+                  aria-describedby={
+                    isValidationError ? "create-follow-up-form-error" : undefined
+                  }
+                  aria-invalid={isValidationError || undefined}
                   name="assignedSalesExecutiveId"
                   required
                   defaultValue=""
@@ -211,6 +226,10 @@ export function CreateFollowUpAction({
               <label className="text-sm font-medium text-slate-700 sm:col-span-2">
                 Follow-up title
                 <input
+                  aria-describedby={
+                    isValidationError ? "create-follow-up-form-error" : undefined
+                  }
+                  aria-invalid={isValidationError || undefined}
                   name="title"
                   type="text"
                   required
@@ -222,6 +241,10 @@ export function CreateFollowUpAction({
               <label className="text-sm font-medium text-slate-700">
                 Due date
                 <input
+                  aria-describedby={
+                    isValidationError ? "create-follow-up-form-error" : undefined
+                  }
+                  aria-invalid={isValidationError || undefined}
                   name="dueDate"
                   type="date"
                   min={defaultDate}
@@ -234,6 +257,10 @@ export function CreateFollowUpAction({
               <label className="text-sm font-medium text-slate-700">
                 Priority
                 <select
+                  aria-describedby={
+                    isValidationError ? "create-follow-up-form-error" : undefined
+                  }
+                  aria-invalid={isValidationError || undefined}
                   name="priority"
                   required
                   defaultValue="medium"
@@ -260,6 +287,7 @@ export function CreateFollowUpAction({
 
               {errorMessage ? (
                 <p
+                  id="create-follow-up-form-error"
                   role="alert"
                   className="text-sm font-medium text-rose-700 sm:col-span-2"
                 >
@@ -285,7 +313,10 @@ export function CreateFollowUpAction({
             </fieldset>
           </form>
         ) : (
-          <div className="mt-5 rounded-xl border border-dashed border-blue-200 bg-white/70 p-6 text-center">
+          <div
+            className="mt-5 rounded-xl border border-dashed border-blue-200 bg-white/70 p-6 text-center"
+            role="status"
+          >
             <p className="text-sm font-semibold text-slate-800">
               Creation options are not available yet
             </p>

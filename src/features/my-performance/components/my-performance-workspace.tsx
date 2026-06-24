@@ -302,7 +302,10 @@ function TrendBar({
   return (
     <div className="grid grid-cols-[72px_minmax(0,1fr)_32px] items-center gap-2 text-xs">
       <span className="font-medium text-slate-500">{label}</span>
-      <div className="h-2 overflow-hidden rounded-full bg-slate-100">
+      <div
+        aria-hidden="true"
+        className="h-2 overflow-hidden rounded-full bg-slate-100"
+      >
         <div
           className={`h-full rounded-full ${
             tone === "planned" ? "bg-blue-300" : "bg-blue-600"
