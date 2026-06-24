@@ -2,7 +2,7 @@
 
 ## Status and purpose
 
-FieldFlow AI is in the **portfolio polish phase**. Core role-based workspaces, Supabase-backed synthetic data, secure workflow RPCs, Manager Insights, Weekly Manager Report, automated tests, and GitHub Actions CI are implemented in this repository. Final portfolio work remains for responsive QA, accessibility QA, screenshots, Vercel deployment, and live smoke testing.
+FieldFlow AI is in the **portfolio polish phase**. Core role-based workspaces, Supabase-backed synthetic data, secure workflow RPCs, Manager Insights, Weekly Manager Report, automated tests, GitHub Actions CI, and recruiter-facing screenshots are implemented in this repository. Final portfolio work remains for responsive QA, accessibility QA, Vercel deployment, and live smoke testing.
 
 The product will be a portfolio-quality copilot for field sales and dealership operations. It will help sales executives organize customer visits and follow-up work while giving managers a clear view of team execution. AI will complement the workflow with on-demand weekly action recommendations rather than operating continuously in the background.
 
@@ -49,7 +49,7 @@ A sales executive must only access records assigned to them or created within th
 - Deterministic rules-based fallback for insights and reports when Gemini is unavailable or unconfigured.
 - Responsive loading, empty, unavailable, error, and authorization states across the main workspaces.
 
-Remaining portfolio items are final responsive QA, accessibility QA, recruiter screenshots, Vercel deployment, live smoke testing, and optional broader E2E/RLS integration coverage.
+Remaining portfolio items are final responsive QA, accessibility QA, Vercel deployment, live smoke testing, and optional broader E2E/RLS integration coverage.
 
 ## Current verified implementation
 
@@ -63,12 +63,12 @@ Repository-verified complete areas:
 - Sales Executive-only My Performance page.
 - Manager Insights and Weekly Manager Report with server-side Gemini support and deterministic fallback.
 - Automated Vitest tests and GitHub Actions CI.
+- Recruiter-facing screenshot gallery.
 
 Still pending:
 
 - Final responsive/mobile QA.
 - Final accessibility QA.
-- Recruiter screenshots.
 - Vercel deployment.
 - Live deployed smoke testing.
 - Optional future E2E and RLS integration coverage.
@@ -217,7 +217,7 @@ Status: **complete for the current portfolio scope**. Manager Insights and Weekl
 - Capture representative screenshots using synthetic data.
 - Configure and verify Vercel deployment without exposing secrets.
 
-Status: **partial**. Vitest tests and GitHub Actions CI are implemented. Recruiter screenshots, Vercel deployment, and live smoke testing remain pending.
+Status: **partial**. Vitest tests, GitHub Actions CI, and recruiter-facing screenshots are implemented. Vercel deployment and live smoke testing remain pending.
 
 ### 8. Dedicated comparison and performance workspaces
 
@@ -235,7 +235,7 @@ Status: **complete**. Dedicated Team Performance, Territories, and My Performanc
 - Add recruiter-facing screenshots.
 - Deploy to Vercel and complete live smoke testing.
 
-Status: **in progress**. Documentation is being refreshed. QA, screenshots, deployment, and live smoke testing remain pending.
+Status: **in progress**. Documentation and recruiter-facing screenshots have been refreshed. QA, deployment, and live smoke testing remain pending.
 
 ## Definition of done
 

@@ -31,6 +31,36 @@ Sales Executives can use:
 - **Tasks** - assigned tasks and secure task completion.
 - **My Performance** - dedicated personal KPI and workload workspace.
 
+## Screenshots
+
+### Manager workspace
+
+![Manager dashboard showing live team KPIs, charts, and priorities](docs/screenshots/manager-dashboard.png)
+
+Manager dashboard with authorized team KPIs, overdue work, priorities, and chart-based performance context.
+
+![Manager insights and weekly report panels with generated recommendations](docs/screenshots/manager-insights-weekly-report.png)
+
+On-demand Manager Insights and Weekly Manager Report output, with deterministic fallback support when Gemini is unavailable.
+
+![Team Performance workspace showing Sales Executive execution metrics](docs/screenshots/team-performance.png)
+
+Dedicated Team Performance workspace for comparing Sales Executive workload, completion, and overdue work.
+
+![Territories workspace showing customer coverage and territory metrics](docs/screenshots/territories.png)
+
+Territories workspace showing customer coverage, visit progress, and territory-level operational risk.
+
+### Sales Executive workspace
+
+![Sales Executive overview showing assigned visits, follow-ups, tasks, and personal priorities](docs/screenshots/sales-executive-overview.png)
+
+Sales Executive overview focused on assigned customers, today's work, urgent follow-ups, and task priorities.
+
+![Mobile My Performance workspace showing personal KPIs](docs/screenshots/my-performance-mobile.png)
+
+Mobile My Performance workspace with personal KPIs, workload trends, and assigned customer coverage.
+
 ## Main workflow
 
 1. Managers create and assign visit plans, follow-ups, and tasks.
