@@ -259,4 +259,3 @@ export async function getMyPerformanceData(
     return { status: "unavailable", today, periodLabel };
   }
 }
-
