@@ -2,7 +2,7 @@
 
 ## Status and purpose
 
-FieldFlow AI is in the **foundation/setup phase**. This document defines the planned product and delivery sequence. Unless explicitly marked as implemented, every feature, integration, entity, workflow, and deployment described below is planned work.
+FieldFlow AI is in the **portfolio polish phase**. Core role-based workspaces, Supabase-backed synthetic data, secure workflow RPCs, Manager Insights, Weekly Manager Report, automated tests, and GitHub Actions CI are implemented in this repository. Final portfolio work remains for responsive QA, accessibility QA, screenshots, Vercel deployment, and live smoke testing.
 
 The product will be a portfolio-quality copilot for field sales and dealership operations. It will help sales executives organize customer visits and follow-up work while giving managers a clear view of team execution. AI will complement the workflow with on-demand weekly action recommendations rather than operating continuously in the background.
 
@@ -12,48 +12,70 @@ The application has two fixed roles.
 
 ### `manager`
 
-Managers will be able to:
+Managers can:
 
 - Monitor performance for sales executives on their team.
 - Track customer follow-ups and overdue work for their team.
 - Review planned, completed, missed, pending, and cancelled visits.
 - Compare territory and salesperson performance.
 - Review team targets and progress.
-- Generate on-demand AI-powered weekly action recommendations.
+- Generate on-demand Manager Insights and Weekly Manager Report output.
 
 A manager must only access teams and related records they are authorized to manage.
 
 ### `sales_executive`
 
-Sales executives will be able to:
+Sales executives can:
 
 - View customers assigned to them.
-- Plan daily customer visits.
-- Mark visits as completed, missed, pending, or cancelled.
-- Record visit outcomes and notes.
-- Create and manage follow-up tasks.
-- View their own KPIs, targets, and pending work.
+- View assigned daily and scheduled customer visits.
+- Complete their assigned visits with an outcome and notes.
+- Complete assigned follow-ups and tasks.
+- View their own KPIs, assigned customer coverage, and pending work.
 
 A sales executive must only access records assigned to them or created within their permitted scope.
 
-## Planned MVP features
+## Implemented MVP features
 
 - Secure authentication and role-based navigation.
-- Manager and sales executive dashboards.
-- Synthetic customer and assignment data.
-- Daily visit planning and visit status tracking.
-- Visit outcomes and notes.
-- Follow-up and general task tracking with due dates.
-- Monthly targets and progress indicators.
-- Manager views for team, territory, and salesperson comparison.
+- Manager and Sales Executive dashboards backed by authorized live synthetic data.
+- Synthetic customer, territory, team, assignment, visit, follow-up, task, and monthly target data.
+- Manager-created visit plans, follow-ups, and tasks through secure RPCs.
+- Sales Executive completion actions for assigned visits, follow-ups, and tasks through secure RPCs.
+- Customer directory and customer detail pages.
+- Dedicated Team Performance, Territories, and My Performance workspaces.
 - KPI charts using Recharts.
-- On-demand Gemini weekly operations recommendations.
-- An exportable operations report.
-- Responsive loading, empty, error, and authorization states.
+- On-demand Manager Insights and Weekly Manager Report generation.
+- Deterministic rules-based fallback for insights and reports when Gemini is unavailable or unconfigured.
+- Responsive loading, empty, unavailable, error, and authorization states across the main workspaces.
 
-## Planned database entities
+Remaining portfolio items are final responsive QA, accessibility QA, recruiter screenshots, Vercel deployment, live smoke testing, and optional broader E2E/RLS integration coverage.
 
-| Entity | Planned responsibility |
+## Current verified implementation
+
+Repository-verified complete areas:
+
+- Authentication and role-based workspaces.
+- Supabase schema, RLS policies, typed clients, synthetic seed data, and secure workflow RPCs.
+- Manager and Sales Executive dashboards.
+- Customers, Visits, Follow-ups, and Tasks workspaces.
+- Manager-only Team Performance and Territories pages.
+- Sales Executive-only My Performance page.
+- Manager Insights and Weekly Manager Report with server-side Gemini support and deterministic fallback.
+- Automated Vitest tests and GitHub Actions CI.
+
+Still pending:
+
+- Final responsive/mobile QA.
+- Final accessibility QA.
+- Recruiter screenshots.
+- Vercel deployment.
+- Live deployed smoke testing.
+- Optional future E2E and RLS integration coverage.
+
+## Database entities
+
+| Entity | Responsibility |
 | --- | --- |
 | `profiles` | User identity, display information, and fixed application role |
 | `teams` | Manager-owned sales teams |
@@ -64,9 +86,9 @@ A sales executive must only access records assigned to them or created within th
 | `follow_ups` | Customer follow-up commitments and due dates |
 | `tasks` | Action items associated with users or business records |
 | `monthly_targets` | Monthly goals for a salesperson, team, or territory |
-| `ai_insights` | Stored metadata and results for explicitly requested AI summaries |
+| `ai_insights` | Schema support for future stored AI-summary metadata; current insight/report UI generates on demand and does not persist output |
 
-The final schema, relationships, indexes, constraints, and RLS policies will be designed during the Supabase phase. No database migrations currently exist.
+The schema, relationships, indexes, constraints, triggers, helper functions, RLS policies, synthetic seed data, and workflow RPCs are represented by migrations in `supabase/migrations`.
 
 ## Security rules
 
@@ -78,7 +100,7 @@ The final schema, relationships, indexes, constraints, and RLS policies will be 
 - Enforce authorization in RLS policies and server-side checks.
 - Validate all untrusted input before database or AI operations.
 - Keep the Supabase service role key and Gemini API key server-side only.
-- The Supabase anon key may be exposed to the browser as designed, with RLS providing database protection.
+- The Supabase publishable key may be exposed to the browser as designed, with RLS providing database protection.
 - Never commit `.env.local` or secret values.
 - Send Gemini only the minimum synthetic operational context required for a requested summary.
 - Call Gemini only after an explicit user action through a secure server-side route.
@@ -92,25 +114,25 @@ The final schema, relationships, indexes, constraints, and RLS policies will be 
 - Prefer lightweight charts, bounded queries, pagination, and small synthetic datasets.
 - Provide graceful fallbacks when a free-tier quota or external integration is unavailable.
 
-## Planned technology stack
+## Technology stack
 
-| Area | Planned technology |
+| Area | Technology |
 | --- | --- |
 | Application | Next.js App Router |
 | Language | TypeScript with no explicit `any` |
 | Styling | Tailwind CSS |
 | Database and authentication | Supabase PostgreSQL and Auth |
 | Authorization | Supabase RLS plus server-side checks |
-| AI | Gemini API through an on-demand server-side route |
+| AI | Gemini API through on-demand server-side routes with deterministic fallback |
 | Charts | Recharts |
 | Deployment | Vercel |
 | Source hosting | GitHub |
 
-Only the initial Next.js, TypeScript, and Tailwind setup currently exists. The other technologies remain planned.
+The application currently uses this stack locally. Vercel deployment remains pending.
 
 ## Architecture guidance
 
-Future application code should use feature-based organization:
+Application code uses feature-based organization:
 
 ```text
 src/
@@ -144,7 +166,7 @@ Codex must not create branches, commits, pushes, pull requests, or file deletion
 - Replace generic starter documentation with FieldFlow AI documentation.
 - Establish contribution and agent rules.
 
-Status: **in progress**. Documentation is being established; no product functionality is implied.
+Status: **complete**. Product scope, constraints, architecture guidance, and agent rules exist.
 
 ### 2. Static UI and demo data
 
@@ -152,7 +174,7 @@ Status: **in progress**. Documentation is being established; no product function
 - Create manager and sales executive screens with typed synthetic data.
 - Establish reusable UI states and feature boundaries.
 
-Status: **planned**.
+Status: **complete**. The application shell, role-specific navigation, and initial dashboard UI have been replaced by live authenticated workspaces.
 
 ### 3. Charts and product workflow
 
@@ -160,7 +182,7 @@ Status: **planned**.
 - Implement front-end visit planning, visit outcomes, follow-ups, tasks, and target workflows against demo data.
 - Confirm the end-to-end user experience before backend integration.
 
-Status: **planned**.
+Status: **complete**. Manager dashboard analytics use Recharts, and visit/follow-up/task workflows exist against live synthetic Supabase data.
 
 ### 4. Supabase database, authentication, and RLS
 
@@ -169,7 +191,7 @@ Status: **planned**.
 - Implement and verify RLS policies for managers and sales executives.
 - Generate strongly typed database definitions.
 
-Status: **planned**. Supabase, authentication, migrations, and RLS are not currently implemented.
+Status: **complete**. Supabase clients, authentication flow, schema migrations, generated database types, RLS policies, synthetic seed data, and secure workflow RPCs are present.
 
 ### 5. Real Supabase data integration
 
@@ -177,7 +199,7 @@ Status: **planned**. Supabase, authentication, migrations, and RLS are not curre
 - Add validation, loading, empty, error, and permission states.
 - Verify workflows with synthetic rows stored in Supabase.
 
-Status: **planned**.
+Status: **complete**. Customers, visits, follow-ups, tasks, Manager dashboard, Sales Executive dashboard, Team Performance, Territories, and My Performance use authorized live data where implemented for their scope.
 
 ### 6. Gemini AI operations summary and exportable report
 
@@ -186,7 +208,7 @@ Status: **planned**.
 - Present useful weekly action recommendations.
 - Add an exportable operations report with a non-AI fallback where practical.
 
-Status: **planned**. Gemini and report export are not currently implemented.
+Status: **complete for the current portfolio scope**. Manager Insights and Weekly Manager Report are on-demand, server-side, Manager-only features with Gemini support and deterministic fallback. Current application code does not persist generated insight/report output.
 
 ### 7. Tests, recruiter README, screenshots, and Vercel deployment
 
@@ -195,7 +217,25 @@ Status: **planned**. Gemini and report export are not currently implemented.
 - Capture representative screenshots using synthetic data.
 - Configure and verify Vercel deployment without exposing secrets.
 
-Status: **planned**. Tests and deployment are not currently implemented.
+Status: **partial**. Vitest tests and GitHub Actions CI are implemented. Recruiter screenshots, Vercel deployment, and live smoke testing remain pending.
+
+### 8. Dedicated comparison and performance workspaces
+
+- Add a Manager-only Team Performance route with live team metrics.
+- Add a Manager-only Territories route with live territory metrics.
+- Add a Sales Executive-only My Performance route with live personal metrics.
+- Keep direct navigation and query parameters from bypassing server-side role checks.
+
+Status: **complete**. Dedicated Team Performance, Territories, and My Performance pages are implemented with deterministic rule tests.
+
+### 9. Documentation and portfolio readiness
+
+- Refresh README and project plan to match implemented functionality.
+- Complete final responsive and accessibility QA.
+- Add recruiter-facing screenshots.
+- Deploy to Vercel and complete live smoke testing.
+
+Status: **in progress**. Documentation is being refreshed. QA, screenshots, deployment, and live smoke testing remain pending.
 
 ## Definition of done
 

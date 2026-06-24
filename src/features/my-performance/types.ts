@@ -60,4 +60,3 @@ export type MyPerformanceResult =
   | { status: "ready"; data: MyPerformanceData }
   | { status: "empty"; periodLabel: string; today: string }
   | { status: "unavailable"; periodLabel: string; today: string };
-

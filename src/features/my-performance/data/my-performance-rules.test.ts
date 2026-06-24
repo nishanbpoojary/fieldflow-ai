@@ -196,4 +196,3 @@ describe("my performance rules", () => {
     expect(result.workload.overdueTasks).toBe(1);
   });
 });
-

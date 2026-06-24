@@ -1,77 +1,160 @@
 # FieldFlow AI
 
-A planned role-based field sales and dealership operations copilot for managers and sales executives.
+FieldFlow AI is a portfolio-style, role-based field-sales and dealership-operations copilot built with synthetic demo data. It gives managers a live view of team execution while helping Sales Executives track their assigned customers, visits, follow-ups, tasks, and personal performance.
 
-## The problem
+The project is designed as a free-tier friendly demo: small synthetic datasets, on-demand AI/report generation, no background AI jobs, and no real customer or employee data.
 
-Field sales teams often track customers, visits, follow-ups, targets, and team performance across disconnected spreadsheets and messages. FieldFlow AI is intended to bring that work into one focused application and provide on-demand operational recommendations.
+## Roles and workspaces
 
-## Intended users
+### Manager
 
-- **Managers** will monitor team performance, visits, follow-ups, overdue work, territories, and salesperson performance.
-- **Sales Executives** will manage assigned customers, daily visits, visit outcomes, follow-up tasks, and personal KPIs.
+Managers can use:
 
-## Planned MVP
+- **Dashboard** - live team KPIs, charts, overdue work, priorities, Manager Insights, and Weekly Manager Report.
+- **Customers** - authorized team customer directory and customer detail views.
+- **Visits** - team visit planning and completed visit outcomes.
+- **Follow-ups** - team follow-up tracking and Manager-created assignments.
+- **Tasks** - team task tracking and Manager-created assignments.
+- **Team Performance** - dedicated team execution workspace.
+- **Territories** - dedicated territory performance workspace.
+- **Manager Insights** - on-demand insight cards from Gemini when configured, otherwise a deterministic rules-based fallback.
+- **Weekly Manager Report** - on-demand weekly report with copy/download Markdown support and deterministic fallback.
 
-- Role-based manager and sales executive experiences
-- Customer assignments and follow-up tracking
-- Daily visit planning and visit status management
-- Visit outcomes, notes, tasks, and monthly targets
-- Manager and personal KPI dashboards
-- Territory and salesperson comparisons
-- On-demand AI weekly action recommendations
-- Exportable operations summary
+### Sales Executive
 
-These features are planned and are not implemented yet.
+Sales Executives can use:
 
-## Planned technology stack
+- **Overview** - live personal dashboard for assigned customers, visits, follow-ups, and tasks.
+- **My Customers** - assigned customer directory and details.
+- **Today's Visits** - assigned visit schedule and secure visit completion.
+- **Follow-ups** - assigned follow-ups and secure follow-up completion.
+- **Tasks** - assigned tasks and secure task completion.
+- **My Performance** - dedicated personal KPI and workload workspace.
 
-- Next.js App Router, TypeScript, and Tailwind CSS
-- Supabase for PostgreSQL, authentication, and Row Level Security
-- Gemini API for on-demand server-side summaries
-- Recharts for dashboards
-- Vercel for deployment and GitHub for repository hosting
+## Main workflow
 
-## Project status
+1. Managers create and assign visit plans, follow-ups, and tasks.
+2. Sales Executives complete their own assigned work.
+3. Supabase Row Level Security and server-side checks keep each role scoped to authorized data.
+4. Dashboards and workspaces refresh from live synthetic database records.
+5. Manager Insights and Weekly Manager Report are generated on demand; they are not persisted by the current application code.
 
-FieldFlow AI is currently in the **foundation/setup phase**. The repository contains the initial Next.js application and project documentation. Supabase, authentication, database migrations, charts, Gemini integration, and deployment are not implemented yet.
+## Technology stack
 
-## Local development
+- **Application:** Next.js App Router 16, React 19, TypeScript
+- **Styling:** Tailwind CSS
+- **Database/auth:** Supabase Auth and PostgreSQL
+- **Authorization:** Supabase Row Level Security plus server-side current-user checks
+- **Typed data access:** generated Supabase database types with typed browser/server clients
+- **Charts:** Recharts
+- **AI/report generation:** Gemini through server-side routes, with deterministic fallback logic
+- **Testing:** Vitest
+- **CI:** GitHub Actions
+
+## Local setup
+
+Use Node.js 24 to match the GitHub Actions workflow.
+
+Install dependencies:
 
 ```bash
 npm install
+```
+
+Create a local environment file from the placeholder names in `.env.example`. Do not commit real values.
+
+```text
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
+GEMINI_API_KEY=
+GEMINI_MODEL=
+```
+
+`GEMINI_API_KEY` is optional for local fallback behavior. Without it, Manager Insights and Weekly Manager Report use deterministic rules-based output.
+
+Database prerequisite:
+
+- Create a Supabase project.
+- Create the expected synthetic demo Auth users before applying the bootstrap migration:
+  - `manager@fieldflow.test`
+  - `maya.chen@fieldflow.test`
+- Apply the migrations in `supabase/migrations` in filename order using your normal Supabase workflow.
+- Keep all data synthetic.
+
+Run the development server:
+
+```bash
 npm run dev
+```
+
+Run quality checks:
+
+```bash
+npm run test
 npm run lint
 npm run build
 ```
 
-## Planned environment variables
+## Architecture and security
 
-These variables are not required during the current foundation phase:
+- App Router routes live under `src/app`.
+- Feature code lives under `src/features`.
+- Supabase and auth utilities live under `src/lib`.
+- Server Components and server-only data loaders are preferred for database reads.
+- Client Components are used only where browser interaction is needed, such as forms, completion actions, charts, and on-demand report/insight buttons.
+- Supabase Auth resolves the signed-in user; application role and team come from `public.profiles`.
+- Managers are scoped to their team.
+- Sales Executives are scoped to their assigned records.
+- Workflow writes use secure Supabase RPCs instead of direct browser table writes.
+- Application code uses publishable Supabase keys only; no service-role credential is used in the app.
+- Gemini calls are server-side only and are explicitly triggered by the Manager.
+- Rules-based fallback logic keeps insights and reports usable without an AI key.
 
-```text
-NEXT_PUBLIC_SUPABASE_URL
-NEXT_PUBLIC_SUPABASE_ANON_KEY
-GEMINI_API_KEY
+## Testing and CI
+
+The test suite focuses on deterministic business logic and API boundaries:
+
+- Manager dashboard rules and chart-supporting calculations
+- Manager Insights rules
+- Weekly Manager Report fallback and Markdown output
+- Manager Insights and Weekly Manager Report API boundary behavior
+- Team Performance rules
+- Territories rules
+- My Performance rules
+
+GitHub Actions runs on pull requests, pushes to `main`, and manual dispatch. The CI command sequence is:
+
+```bash
+npm ci
+npm run test
+npm run lint
+npm run build
 ```
 
-The Gemini key must remain server-side. A future Supabase service role key, if one is ever necessary, must also remain server-side. `.env.local` must never be committed.
+The workflow uses safe CI-only Supabase placeholder values for build-time configuration. It does not deploy.
 
-## Data and cost principles
+## Current status
 
-- Use synthetic demo data only—never real customer, dealership, employee, sales, or personal data.
-- Keep the project within the free tiers of its planned services.
-- Avoid paid APIs, live location tracking, messaging services, paid maps, and large uploads.
-- Enforce future authorization with server checks and Supabase RLS, not merely hidden UI.
+Implemented:
 
-## Roadmap
+- Role-based authentication flow and protected workspaces
+- Supabase schema, RLS policies, typed clients, and synthetic seed data
+- Manager and Sales Executive dashboards with live authorized data
+- Customers, Visits, Follow-ups, and Tasks workspaces
+- Secure RPC-based workflow writes for planning and completion
+- Team Performance, Territories, and My Performance dedicated pages
+- Manager Insights and Weekly Manager Report with Gemini support and deterministic fallback
+- Vitest test baseline and GitHub Actions quality gate
 
-1. Project foundation and documentation
-2. Static UI with typed synthetic demo data
-3. Charts and core sales workflows
-4. Supabase database, authentication, and RLS
-5. Real Supabase data integration
-6. Gemini operations summary and exportable report
-7. Tests, screenshots, recruiter documentation, and Vercel deployment
+Final portfolio steps still pending:
+
+- Responsive/mobile QA pass
+- Accessibility QA pass
+- Recruiter-facing screenshots
+- Vercel deployment
+- Live deployed smoke testing
+- Optional future E2E and RLS integration coverage
+
+No production deployment is documented in this repository yet.
 
 See [`docs/project-plan.md`](docs/project-plan.md) for the detailed internal plan.

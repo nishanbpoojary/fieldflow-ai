@@ -481,4 +481,3 @@ function PerformanceState({
     </section>
   );
 }
-
