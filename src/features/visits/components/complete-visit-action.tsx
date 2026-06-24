@@ -28,6 +28,7 @@ export function CompleteVisitAction({
   const [isOpen, setIsOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isValidationError, setIsValidationError] = useState(false);
   const [outcome, setOutcome] = useState("");
   const [notes, setNotes] = useState("");
   const [nextFollowUpAction, setNextFollowUpAction] = useState("");
@@ -41,6 +42,7 @@ export function CompleteVisitAction({
     setNotes("");
     setNextFollowUpAction("");
     setErrorMessage("");
+    setIsValidationError(false);
   }
 
   function closeForm() {
@@ -58,11 +60,13 @@ export function CompleteVisitAction({
 
     if (!normalizedOutcome || !normalizedNotes) {
       setErrorMessage("Enter both an outcome and completion notes.");
+      setIsValidationError(true);
       return;
     }
 
     setIsSaving(true);
     setErrorMessage("");
+    setIsValidationError(false);
 
     try {
       const { error } = await supabase.rpc("complete_assigned_visit_plan", {
@@ -74,11 +78,13 @@ export function CompleteVisitAction({
 
       if (error) {
         setErrorMessage(completionErrorMessage);
+        setIsValidationError(false);
         setIsSaving(false);
         return;
       }
     } catch {
       setErrorMessage(completionErrorMessage);
+      setIsValidationError(false);
       setIsSaving(false);
       return;
     }
@@ -119,6 +125,12 @@ export function CompleteVisitAction({
         <label className="block text-sm font-medium text-slate-700">
           Outcome
           <input
+            aria-describedby={
+              isValidationError
+                ? `complete-visit-error-${visitPlanId}`
+                : undefined
+            }
+            aria-invalid={isValidationError || undefined}
             type="text"
             required
             value={outcome}
@@ -131,6 +143,12 @@ export function CompleteVisitAction({
         <label className="block text-sm font-medium text-slate-700">
           Completion notes
           <textarea
+            aria-describedby={
+              isValidationError
+                ? `complete-visit-error-${visitPlanId}`
+                : undefined
+            }
+            aria-invalid={isValidationError || undefined}
             required
             rows={4}
             value={notes}
@@ -152,7 +170,11 @@ export function CompleteVisitAction({
         </label>
 
         {errorMessage ? (
-          <p role="alert" className="text-sm font-medium text-rose-700">
+          <p
+            id={`complete-visit-error-${visitPlanId}`}
+            role="alert"
+            className="text-sm font-medium text-rose-700"
+          >
             {errorMessage}
           </p>
         ) : null}

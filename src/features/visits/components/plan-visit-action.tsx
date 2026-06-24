@@ -44,6 +44,7 @@ export function PlanVisitAction({
   const [isOpen, setIsOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isValidationError, setIsValidationError] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
   if (!isManager) {
@@ -57,6 +58,7 @@ export function PlanVisitAction({
   function closePanel() {
     if (isSaving) return;
     setErrorMessage("");
+    setIsValidationError(false);
     setIsOpen(false);
   }
 
@@ -83,11 +85,13 @@ export function PlanVisitAction({
       !isVisitPriority(priority)
     ) {
       setErrorMessage("Select a customer, assignee, date, time, and priority.");
+      setIsValidationError(true);
       return;
     }
 
     setIsSaving(true);
     setErrorMessage("");
+    setIsValidationError(false);
     setSuccessMessage("");
 
     try {
@@ -102,11 +106,13 @@ export function PlanVisitAction({
 
       if (error) {
         setErrorMessage(planVisitErrorMessage);
+        setIsValidationError(false);
         setIsSaving(false);
         return;
       }
     } catch {
       setErrorMessage(planVisitErrorMessage);
+      setIsValidationError(false);
       setIsSaving(false);
       return;
     }
@@ -146,6 +152,7 @@ export function PlanVisitAction({
           type="button"
           onClick={() => {
             setErrorMessage("");
+            setIsValidationError(false);
             setSuccessMessage("");
             setIsOpen((current) => !current);
           }}
@@ -171,6 +178,10 @@ export function PlanVisitAction({
               <label className="text-sm font-medium text-slate-700 sm:col-span-2">
                 Customer
                 <select
+                  aria-describedby={
+                    isValidationError ? "plan-visit-form-error" : undefined
+                  }
+                  aria-invalid={isValidationError || undefined}
                   name="customerId"
                   required
                   defaultValue=""
@@ -190,6 +201,10 @@ export function PlanVisitAction({
               <label className="text-sm font-medium text-slate-700 sm:col-span-2">
                 Assigned sales executive
                 <select
+                  aria-describedby={
+                    isValidationError ? "plan-visit-form-error" : undefined
+                  }
+                  aria-invalid={isValidationError || undefined}
                   name="assignedSalesExecutiveId"
                   required
                   defaultValue=""
@@ -209,6 +224,10 @@ export function PlanVisitAction({
               <label className="text-sm font-medium text-slate-700">
                 Scheduled date
                 <input
+                  aria-describedby={
+                    isValidationError ? "plan-visit-form-error" : undefined
+                  }
+                  aria-invalid={isValidationError || undefined}
                   name="scheduledDate"
                   type="date"
                   min={defaultDate}
@@ -221,6 +240,10 @@ export function PlanVisitAction({
               <label className="text-sm font-medium text-slate-700">
                 Scheduled time
                 <input
+                  aria-describedby={
+                    isValidationError ? "plan-visit-form-error" : undefined
+                  }
+                  aria-invalid={isValidationError || undefined}
                   name="scheduledTime"
                   type="time"
                   required
@@ -231,6 +254,10 @@ export function PlanVisitAction({
               <label className="text-sm font-medium text-slate-700 sm:col-span-2">
                 Priority
                 <select
+                  aria-describedby={
+                    isValidationError ? "plan-visit-form-error" : undefined
+                  }
+                  aria-invalid={isValidationError || undefined}
                   name="priority"
                   required
                   defaultValue="medium"
@@ -257,6 +284,7 @@ export function PlanVisitAction({
 
               {errorMessage ? (
                 <p
+                  id="plan-visit-form-error"
                   role="alert"
                   className="text-sm font-medium text-rose-700 sm:col-span-2"
                 >
@@ -282,7 +310,10 @@ export function PlanVisitAction({
             </fieldset>
           </form>
         ) : (
-          <div className="mt-5 rounded-xl border border-dashed border-blue-200 bg-white/70 p-6 text-center">
+          <div
+            className="mt-5 rounded-xl border border-dashed border-blue-200 bg-white/70 p-6 text-center"
+            role="status"
+          >
             <p className="text-sm font-semibold text-slate-800">
               Planning options are not available yet
             </p>

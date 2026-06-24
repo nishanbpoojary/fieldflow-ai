@@ -29,6 +29,7 @@ export function CompleteTaskAction({
   const [isSaving, setIsSaving] = useState(false);
   const [completionNote, setCompletionNote] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [isValidationError, setIsValidationError] = useState(false);
 
   if (!isSalesExecutive || state !== "open") {
     return null;
@@ -37,6 +38,7 @@ export function CompleteTaskAction({
   function resetForm() {
     setCompletionNote("");
     setErrorMessage("");
+    setIsValidationError(false);
   }
 
   function closeForm() {
@@ -51,11 +53,13 @@ export function CompleteTaskAction({
 
     if (!normalizedCompletionNote) {
       setErrorMessage("Enter a completion note before saving.");
+      setIsValidationError(true);
       return;
     }
 
     setIsSaving(true);
     setErrorMessage("");
+    setIsValidationError(false);
 
     try {
       const { error } = await supabase.rpc("complete_assigned_task", {
@@ -65,11 +69,13 @@ export function CompleteTaskAction({
 
       if (error) {
         setErrorMessage(completionErrorMessage);
+        setIsValidationError(false);
         setIsSaving(false);
         return;
       }
     } catch {
       setErrorMessage(completionErrorMessage);
+      setIsValidationError(false);
       setIsSaving(false);
       return;
     }
@@ -110,6 +116,10 @@ export function CompleteTaskAction({
         <label className="block text-sm font-medium text-slate-700">
           Completion note
           <textarea
+            aria-describedby={
+              isValidationError ? `complete-task-error-${taskId}` : undefined
+            }
+            aria-invalid={isValidationError || undefined}
             required
             rows={4}
             value={completionNote}
@@ -120,7 +130,11 @@ export function CompleteTaskAction({
         </label>
 
         {errorMessage ? (
-          <p role="alert" className="text-sm font-medium text-rose-700">
+          <p
+            id={`complete-task-error-${taskId}`}
+            role="alert"
+            className="text-sm font-medium text-rose-700"
+          >
             {errorMessage}
           </p>
         ) : null}

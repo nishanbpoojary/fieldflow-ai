@@ -248,7 +248,10 @@ function TerritoryCard({ territory }: { territory: TerritoryMetric }) {
         </span>
       </div>
 
-      <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-200">
+      <div
+        aria-hidden="true"
+        className="mt-4 h-2 overflow-hidden rounded-full bg-slate-200"
+      >
         <div
           className="h-full rounded-full bg-blue-600"
           style={{ width: `${Math.min(territory.completionRate, 100)}%` }}

@@ -29,6 +29,7 @@ export function CompleteFollowUpAction({
   const [isSaving, setIsSaving] = useState(false);
   const [completionNote, setCompletionNote] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [isValidationError, setIsValidationError] = useState(false);
 
   if (!isSalesExecutive || state !== "open") {
     return null;
@@ -37,6 +38,7 @@ export function CompleteFollowUpAction({
   function resetForm() {
     setCompletionNote("");
     setErrorMessage("");
+    setIsValidationError(false);
   }
 
   function closeForm() {
@@ -51,11 +53,13 @@ export function CompleteFollowUpAction({
 
     if (!normalizedCompletionNote) {
       setErrorMessage("Enter a completion note before saving.");
+      setIsValidationError(true);
       return;
     }
 
     setIsSaving(true);
     setErrorMessage("");
+    setIsValidationError(false);
 
     try {
       const { error } = await supabase.rpc("complete_assigned_follow_up", {
@@ -65,11 +69,13 @@ export function CompleteFollowUpAction({
 
       if (error) {
         setErrorMessage(completionErrorMessage);
+        setIsValidationError(false);
         setIsSaving(false);
         return;
       }
     } catch {
       setErrorMessage(completionErrorMessage);
+      setIsValidationError(false);
       setIsSaving(false);
       return;
     }
@@ -110,6 +116,12 @@ export function CompleteFollowUpAction({
         <label className="block text-sm font-medium text-slate-700">
           Completion note
           <textarea
+            aria-describedby={
+              isValidationError
+                ? `complete-follow-up-error-${followUpId}`
+                : undefined
+            }
+            aria-invalid={isValidationError || undefined}
             required
             rows={4}
             value={completionNote}
@@ -120,7 +132,11 @@ export function CompleteFollowUpAction({
         </label>
 
         {errorMessage ? (
-          <p role="alert" className="text-sm font-medium text-rose-700">
+          <p
+            id={`complete-follow-up-error-${followUpId}`}
+            role="alert"
+            className="text-sm font-medium text-rose-700"
+          >
             {errorMessage}
           </p>
         ) : null}
