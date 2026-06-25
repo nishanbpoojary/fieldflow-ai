@@ -18,6 +18,7 @@ type ClaimsResult = Awaited<
 type ProfileRow = {
   id: string;
   display_name: string;
+  job_title: string | null;
   role: "manager" | "sales_executive";
   team_id: string | null;
   status: "invited" | "active" | "disabled";
@@ -33,6 +34,7 @@ type ProfileResult = {
 const activeOrganizationAdminWithoutTeam: ProfileRow = {
   id: "organization-admin-id",
   display_name: "Priya Admin",
+  job_title: "Operations Lead",
   role: "manager",
   team_id: null,
   status: "active",
@@ -48,6 +50,7 @@ const activeOrganizationAdminWithTeam: ProfileRow = {
 const activeManager: ProfileRow = {
   id: "manager-id",
   display_name: "Arjun Rao",
+  job_title: null,
   role: "manager",
   team_id: "team-id",
   status: "active",
@@ -58,6 +61,7 @@ const activeManager: ProfileRow = {
 const activeSalesExecutive: ProfileRow = {
   id: "sales-id",
   display_name: "Maya Chen",
+  job_title: "Sales Executive",
   role: "sales_executive",
   team_id: "team-id",
   status: "active",
@@ -104,13 +108,15 @@ describe("getOrganizationAdmin", () => {
 
     await expect(getOrganizationAdmin()).resolves.toEqual({
       id: "organization-admin-id",
+      displayName: "Priya Admin",
+      jobTitle: "Operations Lead",
       organizationId: "organization-id",
       role: "manager",
       teamId: null,
       isOrganizationAdmin: true,
     });
     expect(select).toHaveBeenCalledWith(
-      "id, role, team_id, status, organization_id, is_organization_admin",
+      "id, display_name, job_title, role, team_id, status, organization_id, is_organization_admin",
     );
     expect(eq).toHaveBeenCalledWith("id", "organization-admin-id");
   });
@@ -120,6 +126,8 @@ describe("getOrganizationAdmin", () => {
 
     await expect(getOrganizationAdmin()).resolves.toEqual({
       id: "organization-admin-id",
+      displayName: "Priya Admin",
+      jobTitle: "Operations Lead",
       organizationId: "organization-id",
       role: "manager",
       teamId: "team-id",

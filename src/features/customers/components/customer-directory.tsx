@@ -8,12 +8,14 @@ import type {
 interface CustomerDirectoryProps {
   context: CustomerPageContext;
   displayName: string;
+  jobTitle?: string | null;
   result: CustomerDirectoryResult;
 }
 
 export function CustomerDirectory({
   context,
   displayName,
+  jobTitle,
   result,
 }: CustomerDirectoryProps) {
   const isSalesExecutive = context.role === "sales_executive";
@@ -29,6 +31,7 @@ export function CustomerDirectory({
         activeItem="customers"
         role={context.role}
         displayName={displayName}
+        jobTitle={jobTitle}
         isOrganizationAdmin={context.isOrganizationAdmin}
       />
 

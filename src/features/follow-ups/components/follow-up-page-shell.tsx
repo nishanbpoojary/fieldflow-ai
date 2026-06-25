@@ -9,6 +9,7 @@ import type {
 interface FollowUpPageShellProps {
   context: FollowUpPageContext;
   displayName: string;
+  jobTitle?: string | null;
   result: FollowUpWorkspaceResult;
 }
 
@@ -25,6 +26,7 @@ function formatOverviewDate(date: string) {
 export function FollowUpPageShell({
   context,
   displayName,
+  jobTitle,
   result,
 }: FollowUpPageShellProps) {
   const isManager = context.role === "manager";
@@ -34,6 +36,7 @@ export function FollowUpPageShell({
       <AppSidebar
         role={context.role}
         displayName={displayName}
+        jobTitle={jobTitle}
         activeItem="follow-ups"
         isOrganizationAdmin={context.isOrganizationAdmin}
       />

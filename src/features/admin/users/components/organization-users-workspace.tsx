@@ -27,7 +27,8 @@ export function OrganizationUsersWorkspace({
     <div className="min-h-screen bg-slate-50 text-slate-950 lg:flex">
       <AppSidebar
         role={organizationAdmin.role}
-        displayName="Organization Admin"
+        displayName={organizationAdmin.displayName}
+        jobTitle={organizationAdmin.jobTitle}
         activeItem="admin-users"
         isOrganizationAdmin={organizationAdmin.isOrganizationAdmin}
       />

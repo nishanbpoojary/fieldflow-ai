@@ -10,12 +10,14 @@ import type {
 interface TerritoryWorkspaceProps {
   context: TerritoryPageContext;
   displayName: string;
+  jobTitle?: string | null;
   result: TerritoryWorkspaceResult;
 }
 
 export function TerritoryWorkspace({
   context,
   displayName,
+  jobTitle,
   result,
 }: TerritoryWorkspaceProps) {
   const periodLabel =
@@ -26,6 +28,7 @@ export function TerritoryWorkspace({
       <AppSidebar
         role={context.role}
         displayName={displayName}
+        jobTitle={jobTitle}
         activeItem="territories"
         isOrganizationAdmin={context.isOrganizationAdmin}
       />
@@ -85,15 +88,18 @@ export function TerritoryWorkspace({
 export function TerritoryAccessDenied({
   context,
   displayName,
+  jobTitle,
 }: {
   context: TerritoryPageContext;
   displayName: string;
+  jobTitle?: string | null;
 }) {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-950 lg:flex">
       <AppSidebar
         role={context.role}
         displayName={displayName}
+        jobTitle={jobTitle}
         isOrganizationAdmin={context.isOrganizationAdmin}
       />
 

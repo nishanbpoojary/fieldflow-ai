@@ -12,12 +12,14 @@ import type {
 interface MyPerformanceWorkspaceProps {
   context: MyPerformancePageContext;
   displayName: string;
+  jobTitle?: string | null;
   result: MyPerformanceResult;
 }
 
 export function MyPerformanceWorkspace({
   context,
   displayName,
+  jobTitle,
   result,
 }: MyPerformanceWorkspaceProps) {
   const periodLabel =
@@ -28,6 +30,7 @@ export function MyPerformanceWorkspace({
       <AppSidebar
         role={context.role}
         displayName={displayName}
+        jobTitle={jobTitle}
         activeItem="my-performance"
         isOrganizationAdmin={context.isOrganizationAdmin}
       />
@@ -86,15 +89,18 @@ export function MyPerformanceWorkspace({
 export function MyPerformanceAccessDenied({
   context,
   displayName,
+  jobTitle,
 }: {
   context: MyPerformancePageContext;
   displayName: string;
+  jobTitle?: string | null;
 }) {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-950 lg:flex">
       <AppSidebar
         role={context.role}
         displayName={displayName}
+        jobTitle={jobTitle}
         isOrganizationAdmin={context.isOrganizationAdmin}
       />
 

@@ -19,6 +19,7 @@ export default async function TerritoriesPage() {
       <TerritoryAccessDenied
         context={context}
         displayName={currentUser.displayName}
+        jobTitle={currentUser.jobTitle}
       />
     );
   }
@@ -29,6 +30,7 @@ export default async function TerritoriesPage() {
     <TerritoryWorkspace
       context={context}
       displayName={currentUser.displayName}
+      jobTitle={currentUser.jobTitle}
       result={result}
     />
   );

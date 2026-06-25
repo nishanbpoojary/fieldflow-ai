@@ -14,12 +14,14 @@ import type {
 interface CustomerDetailProps {
   context: CustomerPageContext;
   displayName: string;
+  jobTitle?: string | null;
   result: CustomerDetailResult;
 }
 
 export function CustomerDetail({
   context,
   displayName,
+  jobTitle,
   result,
 }: CustomerDetailProps) {
   return (
@@ -28,6 +30,7 @@ export function CustomerDetail({
         activeItem="customers"
         role={context.role}
         displayName={displayName}
+        jobTitle={jobTitle}
         isOrganizationAdmin={context.isOrganizationAdmin}
       />
 

@@ -25,6 +25,7 @@ export default async function CustomerDetailPage({
     <CustomerDetail
       context={context}
       displayName={currentUser.displayName}
+      jobTitle={currentUser.jobTitle}
       result={result}
     />
   );

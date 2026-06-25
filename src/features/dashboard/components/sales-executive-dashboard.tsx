@@ -9,6 +9,7 @@ import type { SalesExecutiveDashboardResult } from "@/features/dashboard/types";
 
 interface SalesExecutiveDashboardProps {
   displayName: string;
+  jobTitle?: string | null;
   isOrganizationAdmin?: boolean;
   result: SalesExecutiveDashboardResult;
 }
@@ -63,6 +64,7 @@ function DashboardState({ status }: { status: "empty" | "unavailable" }) {
 
 export function SalesExecutiveDashboard({
   displayName,
+  jobTitle,
   isOrganizationAdmin = false,
   result,
 }: SalesExecutiveDashboardProps) {
@@ -78,6 +80,7 @@ export function SalesExecutiveDashboard({
       <AppSidebar
         role="sales_executive"
         displayName={displayName}
+        jobTitle={jobTitle}
         isOrganizationAdmin={isOrganizationAdmin}
       />
 

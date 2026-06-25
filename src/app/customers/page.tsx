@@ -16,6 +16,7 @@ export default async function CustomersPage() {
     <CustomerDirectory
       context={context}
       displayName={currentUser.displayName}
+      jobTitle={currentUser.jobTitle}
       result={result}
     />
   );

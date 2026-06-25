@@ -9,6 +9,7 @@ import type {
 interface TaskPageShellProps {
   context: TaskPageContext;
   displayName: string;
+  jobTitle?: string | null;
   result: TaskWorkspaceResult;
 }
 
@@ -25,6 +26,7 @@ function formatOverviewDate(date: string) {
 export function TaskPageShell({
   context,
   displayName,
+  jobTitle,
   result,
 }: TaskPageShellProps) {
   const isManager = context.role === "manager";
@@ -34,6 +36,7 @@ export function TaskPageShell({
       <AppSidebar
         role={context.role}
         displayName={displayName}
+        jobTitle={jobTitle}
         activeItem="tasks"
         isOrganizationAdmin={context.isOrganizationAdmin}
       />
