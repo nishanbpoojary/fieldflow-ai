@@ -292,6 +292,147 @@ export type Database = {
           },
         ]
       }
+      organization_invitation_events: {
+        Row: {
+          actor_profile_id: string | null
+          event_type: Database["public"]["Enums"]["organization_invitation_event_type"]
+          id: string
+          invitation_id: string
+          occurred_at: string
+          organization_id: string
+        }
+        Insert: {
+          actor_profile_id?: string | null
+          event_type: Database["public"]["Enums"]["organization_invitation_event_type"]
+          id?: string
+          invitation_id: string
+          occurred_at?: string
+          organization_id: string
+        }
+        Update: {
+          actor_profile_id?: string | null
+          event_type?: Database["public"]["Enums"]["organization_invitation_event_type"]
+          id?: string
+          invitation_id?: string
+          occurred_at?: string
+          organization_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_invitation_events_actor_profile_fkey"
+            columns: ["actor_profile_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "organization_invitation_events_invitation_org_fkey"
+            columns: ["invitation_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "organization_invitations"
+            referencedColumns: ["id", "organization_id"]
+          },
+        ]
+      }
+      organization_invitations: {
+        Row: {
+          accepted_at: string | null
+          accepted_profile_id: string | null
+          created_at: string
+          expires_at: string
+          id: string
+          invited_by_profile_id: string
+          job_title: string | null
+          last_sent_at: string | null
+          normalized_invited_email: string
+          organization_id: string
+          resend_count: number
+          revoked_at: string | null
+          revoked_by_profile_id: string | null
+          sent_at: string | null
+          status: Database["public"]["Enums"]["organization_invitation_status"]
+          target_role: Database["public"]["Enums"]["app_role"]
+          target_team_id: string
+          updated_at: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          accepted_profile_id?: string | null
+          created_at?: string
+          expires_at: string
+          id?: string
+          invited_by_profile_id: string
+          job_title?: string | null
+          last_sent_at?: string | null
+          normalized_invited_email: string
+          organization_id: string
+          resend_count?: number
+          revoked_at?: string | null
+          revoked_by_profile_id?: string | null
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["organization_invitation_status"]
+          target_role: Database["public"]["Enums"]["app_role"]
+          target_team_id: string
+          updated_at?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          accepted_profile_id?: string | null
+          created_at?: string
+          expires_at?: string
+          id?: string
+          invited_by_profile_id?: string
+          job_title?: string | null
+          last_sent_at?: string | null
+          normalized_invited_email?: string
+          organization_id?: string
+          resend_count?: number
+          revoked_at?: string | null
+          revoked_by_profile_id?: string | null
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["organization_invitation_status"]
+          target_role?: Database["public"]["Enums"]["app_role"]
+          target_team_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_invitations_accepted_profile_fkey"
+            columns: ["accepted_profile_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "organization_invitations_inviter_profile_fkey"
+            columns: ["invited_by_profile_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "organization_invitations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "organization_invitations_revoker_profile_fkey"
+            columns: ["revoked_by_profile_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id", "organization_id"]
+          },
+          {
+            foreignKeyName: "organization_invitations_team_organization_fkey"
+            columns: ["target_team_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id", "organization_id"]
+          },
+        ]
+      }
       organizations: {
         Row: {
           created_at: string
@@ -778,6 +919,21 @@ export type Database = {
         | "converted"
         | "inactive"
       insight_provider: "gemini" | "mock"
+      organization_invitation_event_type:
+        | "created"
+        | "sent"
+        | "resent"
+        | "send_failed"
+        | "accepted"
+        | "expired"
+        | "revoked"
+      organization_invitation_status:
+        | "pending"
+        | "sent"
+        | "accepted"
+        | "expired"
+        | "revoked"
+        | "send_failed"
       priority_level: "high" | "medium" | "low"
       profile_status: "invited" | "active" | "disabled"
       visit_plan_status: "pending" | "completed" | "missed" | "cancelled"
@@ -918,6 +1074,23 @@ export const Constants = {
         "inactive",
       ],
       insight_provider: ["gemini", "mock"],
+      organization_invitation_event_type: [
+        "created",
+        "sent",
+        "resent",
+        "send_failed",
+        "accepted",
+        "expired",
+        "revoked",
+      ],
+      organization_invitation_status: [
+        "pending",
+        "sent",
+        "accepted",
+        "expired",
+        "revoked",
+        "send_failed",
+      ],
       priority_level: ["high", "medium", "low"],
       profile_status: ["invited", "active", "disabled"],
       visit_plan_status: ["pending", "completed", "missed", "cancelled"],
