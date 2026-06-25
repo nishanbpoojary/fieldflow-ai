@@ -292,12 +292,36 @@ export type Database = {
           },
         ]
       }
+      organizations: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
           display_name: string
           id: string
+          is_organization_admin: boolean
+          organization_id: string | null
           role: Database["public"]["Enums"]["app_role"]
+          status: Database["public"]["Enums"]["profile_status"]
           team_id: string | null
           updated_at: string
         }
@@ -305,7 +329,10 @@ export type Database = {
           created_at?: string
           display_name: string
           id: string
+          is_organization_admin?: boolean
+          organization_id?: string | null
           role?: Database["public"]["Enums"]["app_role"]
+          status?: Database["public"]["Enums"]["profile_status"]
           team_id?: string | null
           updated_at?: string
         }
@@ -313,17 +340,34 @@ export type Database = {
           created_at?: string
           display_name?: string
           id?: string
+          is_organization_admin?: boolean
+          organization_id?: string | null
           role?: Database["public"]["Enums"]["app_role"]
+          status?: Database["public"]["Enums"]["profile_status"]
           team_id?: string | null
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "profiles_team_id_fkey"
             columns: ["team_id"]
             isOneToOne: false
             referencedRelation: "teams"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_team_organization_fkey"
+            columns: ["team_id", "organization_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id", "organization_id"]
           },
         ]
       }
@@ -412,21 +456,32 @@ export type Database = {
           created_at: string
           id: string
           name: string
+          organization_id: string
           updated_at: string
         }
         Insert: {
           created_at?: string
           id?: string
           name: string
+          organization_id: string
           updated_at?: string
         }
         Update: {
           created_at?: string
           id?: string
           name?: string
+          organization_id?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "teams_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       territories: {
         Row: {
@@ -689,11 +744,14 @@ export type Database = {
           visit_plan_id: string
         }[]
       }
+      current_user_is_active: { Args: never; Returns: boolean }
       current_user_is_manager: { Args: never; Returns: boolean }
       current_user_is_manager_for_team: {
         Args: { target_team_id: string }
         Returns: boolean
       }
+      current_user_is_organization_admin: { Args: never; Returns: boolean }
+      current_user_organization_id: { Args: never; Returns: string }
       current_user_role: {
         Args: never
         Returns: Database["public"]["Enums"]["app_role"]
@@ -710,6 +768,7 @@ export type Database = {
         | "inactive"
       insight_provider: "gemini" | "mock"
       priority_level: "high" | "medium" | "low"
+      profile_status: "invited" | "active" | "disabled"
       visit_plan_status: "pending" | "completed" | "missed" | "cancelled"
       work_item_state: "open" | "completed" | "cancelled"
     }
@@ -849,6 +908,7 @@ export const Constants = {
       ],
       insight_provider: ["gemini", "mock"],
       priority_level: ["high", "medium", "low"],
+      profile_status: ["invited", "active", "disabled"],
       visit_plan_status: ["pending", "completed", "missed", "cancelled"],
       work_item_state: ["open", "completed", "cancelled"],
     },
