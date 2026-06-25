@@ -180,7 +180,6 @@ Final portfolio steps still pending:
 
 - Responsive/mobile QA pass
 - Accessibility QA pass
-- Recruiter-facing screenshots
 - Vercel deployment
 - Live deployed smoke testing
 - Optional future E2E and RLS integration coverage
