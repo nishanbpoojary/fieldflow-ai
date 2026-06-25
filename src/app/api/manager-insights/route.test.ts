@@ -156,6 +156,19 @@ describe("POST /api/manager-insights", () => {
     expect(generateManagerInsightsMock).not.toHaveBeenCalled();
   });
 
+  it("denies non-active account contexts before dashboard or Gemini work runs", async () => {
+    getCurrentUserMock.mockResolvedValue(null);
+
+    const response = await callPostWithUntrustedBody();
+    const body = await readResponse(response);
+
+    expect(response.status).toBe(401);
+    expect(body.error).toBe("Authentication is required.");
+    expect(getManagerDashboardDataMock).not.toHaveBeenCalled();
+    expect(generateGeminiManagerInsightsMock).not.toHaveBeenCalled();
+    expect(generateManagerInsightsMock).not.toHaveBeenCalled();
+  });
+
   it("returns 403 for authenticated Sales Executives, even with a manager-looking request body", async () => {
     getCurrentUserMock.mockResolvedValue(salesExecutiveUser);
 
