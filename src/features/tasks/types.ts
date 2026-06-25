@@ -27,6 +27,7 @@ export interface TaskRecord {
 export interface TaskPageContext {
   role: AppRole;
   roleLabel: string;
+  isOrganizationAdmin?: boolean;
 }
 
 export interface TaskCustomerOption {

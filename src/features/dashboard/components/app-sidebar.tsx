@@ -10,6 +10,7 @@ import type { AppRole } from "@/features/dashboard/types";
 interface AppSidebarProps {
   role: AppRole;
   displayName: string;
+  isOrganizationAdmin?: boolean;
   activeItem?:
     | "overview"
     | "customers"
@@ -18,7 +19,8 @@ interface AppSidebarProps {
     | "tasks"
     | "team-performance"
     | "territories"
-    | "my-performance";
+    | "my-performance"
+    | "admin-users";
 }
 
 const roleProfiles: Record<
@@ -37,14 +39,34 @@ const roleProfiles: Record<
   },
 };
 
+const organizationAdminNavigationItem = {
+  label: "Users",
+  shortLabel: "US",
+  active: false,
+};
+
+export function getSidebarNavigation(
+  role: AppRole,
+  isOrganizationAdmin = false,
+) {
+  const baseNavigation =
+    role === "manager" ? managerNavigation : salesExecutiveNavigation;
+
+  if (!isOrganizationAdmin) {
+    return baseNavigation;
+  }
+
+  return [...baseNavigation, organizationAdminNavigationItem];
+}
+
 export function AppSidebar({
   role,
   displayName,
+  isOrganizationAdmin = false,
   activeItem = "overview",
 }: AppSidebarProps) {
   const profile = roleProfiles[role];
-  const navigation =
-    role === "manager" ? managerNavigation : salesExecutiveNavigation;
+  const navigation = getSidebarNavigation(role, isOrganizationAdmin);
 
   return (
     <aside className="bg-slate-950 text-slate-100 lg:sticky lg:top-0 lg:flex lg:h-screen lg:w-64 lg:shrink-0 lg:flex-col">
@@ -84,6 +106,7 @@ export function AppSidebar({
             const isTeamPerformanceItem = item.label === "Team Performance";
             const isTerritoryItem = item.label === "Territories";
             const isMyPerformanceItem = item.label === "My Performance";
+            const isAdminUsersItem = item.label === "Users";
             const isActive =
               activeItem === "customers"
                 ? isCustomerItem
@@ -99,7 +122,9 @@ export function AppSidebar({
                           ? isTerritoryItem
                           : activeItem === "my-performance"
                             ? isMyPerformanceItem
-                            : item.active;
+                            : activeItem === "admin-users"
+                              ? isAdminUsersItem
+                              : item.active;
             const itemHref = isOverviewItem
               ? "/"
               : isCustomerItem
@@ -111,9 +136,11 @@ export function AppSidebar({
                     : isTaskItem
                       ? "/tasks"
                       : isTeamPerformanceItem
-                        ? "/team-performance"
-                        : isTerritoryItem
-                          ? "/territories"
+                      ? "/team-performance"
+                      : isTerritoryItem
+                        ? "/territories"
+                        : isAdminUsersItem
+                          ? "/admin/users"
                           : "/my-performance";
             const itemDestination = isOverviewItem
               ? "dashboard"
@@ -125,7 +152,9 @@ export function AppSidebar({
                     ? "tracker"
                     : isTaskItem
                       ? "board"
-                      : "workspace";
+                      : isAdminUsersItem
+                        ? "directory"
+                        : "workspace";
             const itemClassName = `flex min-h-10 items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium lg:min-h-11 ${
               isActive
                 ? "bg-blue-600 text-white shadow-sm shadow-blue-950/40"
@@ -158,7 +187,8 @@ export function AppSidebar({
                 isTaskItem ||
                 isTeamPerformanceItem ||
                 isTerritoryItem ||
-                isMyPerformanceItem ? (
+                isMyPerformanceItem ||
+                isAdminUsersItem ? (
                   <Link
                     href={itemHref}
                     aria-current={isActive ? "page" : undefined}

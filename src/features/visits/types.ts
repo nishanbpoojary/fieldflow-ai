@@ -44,6 +44,7 @@ export interface VisitPlanningOptions {
 export interface VisitPageContext {
   role: AppRole;
   roleLabel: string;
+  isOrganizationAdmin?: boolean;
 }
 
 export interface VisitRecord {

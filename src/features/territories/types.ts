@@ -3,6 +3,7 @@ import type { CurrentUserRole } from "@/lib/auth/current-user";
 export interface TerritoryPageContext {
   role: CurrentUserRole;
   roleLabel: "Manager" | "Sales Executive";
+  isOrganizationAdmin?: boolean;
 }
 
 export interface TerritorySummary {

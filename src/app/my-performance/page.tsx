@@ -11,6 +11,7 @@ export default async function MyPerformancePage() {
     role: currentUser.role,
     roleLabel:
       currentUser.role === "manager" ? "Manager" : "Sales Executive",
+    isOrganizationAdmin: currentUser.isOrganizationAdmin,
   } as const;
 
   if (currentUser.role !== "sales_executive") {

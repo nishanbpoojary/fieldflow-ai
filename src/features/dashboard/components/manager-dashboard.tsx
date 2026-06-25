@@ -10,6 +10,7 @@ import type { ManagerDashboardResult } from "@/features/dashboard/types";
 
 interface ManagerDashboardProps {
   displayName: string;
+  isOrganizationAdmin?: boolean;
   result: ManagerDashboardResult;
 }
 
@@ -54,6 +55,7 @@ function DashboardState({ status }: { status: "empty" | "unavailable" }) {
 
 export function ManagerDashboard({
   displayName,
+  isOrganizationAdmin = false,
   result,
 }: ManagerDashboardProps) {
   const periodLabel =
@@ -65,7 +67,11 @@ export function ManagerDashboard({
 
   return (
     <div className="min-h-screen bg-slate-100 lg:flex">
-      <AppSidebar role="manager" displayName={displayName} />
+      <AppSidebar
+        role="manager"
+        displayName={displayName}
+        isOrganizationAdmin={isOrganizationAdmin}
+      />
 
       <main id="overview" className="min-w-0 flex-1">
         <header className="border-b border-slate-200 bg-white px-4 py-5 sm:px-6 lg:px-8">

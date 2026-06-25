@@ -55,6 +55,7 @@ export interface DemoCustomer {
 export interface CustomerPageContext {
   role: AppRole;
   roleLabel: string;
+  isOrganizationAdmin?: boolean;
 }
 
 export interface CustomerRecord {

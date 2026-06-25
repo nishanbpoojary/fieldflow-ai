@@ -17,6 +17,7 @@ export default async function CustomerDetailPage({
     role: currentUser.role,
     roleLabel:
       currentUser.role === "sales_executive" ? "Sales Executive" : "Manager",
+    isOrganizationAdmin: currentUser.isOrganizationAdmin,
   };
   const result = await getCustomerDetail(currentUser, customerId);
 

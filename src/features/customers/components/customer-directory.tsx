@@ -29,6 +29,7 @@ export function CustomerDirectory({
         activeItem="customers"
         role={context.role}
         displayName={displayName}
+        isOrganizationAdmin={context.isOrganizationAdmin}
       />
 
       <main className="min-w-0 flex-1">
