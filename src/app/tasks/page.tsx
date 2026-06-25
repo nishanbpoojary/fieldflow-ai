@@ -9,6 +9,7 @@ export default async function TasksPage() {
     role: currentUser.role,
     roleLabel:
       currentUser.role === "manager" ? "Manager" : "Sales Executive",
+    isOrganizationAdmin: currentUser.isOrganizationAdmin,
   } as const;
 
   return (

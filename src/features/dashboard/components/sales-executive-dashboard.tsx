@@ -9,6 +9,7 @@ import type { SalesExecutiveDashboardResult } from "@/features/dashboard/types";
 
 interface SalesExecutiveDashboardProps {
   displayName: string;
+  isOrganizationAdmin?: boolean;
   result: SalesExecutiveDashboardResult;
 }
 
@@ -62,6 +63,7 @@ function DashboardState({ status }: { status: "empty" | "unavailable" }) {
 
 export function SalesExecutiveDashboard({
   displayName,
+  isOrganizationAdmin = false,
   result,
 }: SalesExecutiveDashboardProps) {
   const periodLabel =
@@ -73,7 +75,11 @@ export function SalesExecutiveDashboard({
 
   return (
     <div className="min-h-screen bg-slate-100 lg:flex">
-      <AppSidebar role="sales_executive" displayName={displayName} />
+      <AppSidebar
+        role="sales_executive"
+        displayName={displayName}
+        isOrganizationAdmin={isOrganizationAdmin}
+      />
 
       <main id="overview" className="min-w-0 flex-1">
         <header className="border-b border-slate-200 bg-white px-4 py-5 sm:px-6 lg:px-8">

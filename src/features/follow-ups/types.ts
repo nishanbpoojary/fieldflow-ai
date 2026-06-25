@@ -12,6 +12,7 @@ export type FollowUpPriority = "high" | "medium" | "low";
 export interface FollowUpPageContext {
   role: AppRole;
   roleLabel: string;
+  isOrganizationAdmin?: boolean;
 }
 
 export interface FollowUpCustomerOption {

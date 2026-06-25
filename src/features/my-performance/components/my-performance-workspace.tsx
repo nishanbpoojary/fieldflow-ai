@@ -29,6 +29,7 @@ export function MyPerformanceWorkspace({
         role={context.role}
         displayName={displayName}
         activeItem="my-performance"
+        isOrganizationAdmin={context.isOrganizationAdmin}
       />
 
       <main className="min-w-0 flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-8 xl:px-10">
@@ -91,7 +92,11 @@ export function MyPerformanceAccessDenied({
 }) {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-950 lg:flex">
-      <AppSidebar role={context.role} displayName={displayName} />
+      <AppSidebar
+        role={context.role}
+        displayName={displayName}
+        isOrganizationAdmin={context.isOrganizationAdmin}
+      />
 
       <main className="min-w-0 flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-8 xl:px-10">
         <section className="mx-auto max-w-3xl rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm shadow-slate-200/60">

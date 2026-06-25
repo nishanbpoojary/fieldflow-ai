@@ -21,6 +21,7 @@ type ProfileRow = {
   team_id: string | null;
   status: "invited" | "active" | "disabled";
   organization_id: string | null;
+  is_organization_admin: boolean;
 };
 
 type ProfileResult = {
@@ -35,6 +36,7 @@ const activeManagerProfile: ProfileRow = {
   team_id: "team-id",
   status: "active",
   organization_id: "organization-id",
+  is_organization_admin: true,
 };
 
 const activeSalesExecutiveProfile: ProfileRow = {
@@ -44,6 +46,7 @@ const activeSalesExecutiveProfile: ProfileRow = {
   team_id: "team-id",
   status: "active",
   organization_id: "organization-id",
+  is_organization_admin: false,
 };
 
 const createClientMock = vi.mocked(createClient);
@@ -88,9 +91,10 @@ describe("getCurrentUser", () => {
       displayName: "Arjun Rao",
       role: "manager",
       teamId: "team-id",
+      isOrganizationAdmin: true,
     });
     expect(select).toHaveBeenCalledWith(
-      "id, display_name, role, team_id, status, organization_id",
+      "id, display_name, role, team_id, status, organization_id, is_organization_admin",
     );
     expect(eq).toHaveBeenCalledWith("id", "manager-user-id");
   });
@@ -103,6 +107,7 @@ describe("getCurrentUser", () => {
       displayName: "Maya Chen",
       role: "sales_executive",
       teamId: "team-id",
+      isOrganizationAdmin: false,
     });
   });
 

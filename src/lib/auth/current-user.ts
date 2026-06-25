@@ -13,6 +13,7 @@ export interface CurrentUser {
   displayName: string;
   role: CurrentUserRole;
   teamId: string;
+  isOrganizationAdmin: boolean;
 }
 
 function isCurrentUserRole(role: string): role is CurrentUserRole {
@@ -37,7 +38,9 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
 
   const { data: profile, error: profileError } = await supabase
     .from("profiles")
-    .select("id, display_name, role, team_id, status, organization_id")
+    .select(
+      "id, display_name, role, team_id, status, organization_id, is_organization_admin",
+    )
     .eq("id", userId)
     .maybeSingle();
 
@@ -58,6 +61,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
     displayName: profile.display_name,
     role: profile.role,
     teamId: profile.team_id,
+    isOrganizationAdmin: profile.is_organization_admin,
   };
 }
 

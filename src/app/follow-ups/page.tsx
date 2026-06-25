@@ -12,6 +12,7 @@ export default async function FollowUpsPage() {
         role: currentUser.role,
         roleLabel:
           currentUser.role === "manager" ? "Manager" : "Sales Executive",
+        isOrganizationAdmin: currentUser.isOrganizationAdmin,
       }}
       displayName={currentUser.displayName}
       result={result}
