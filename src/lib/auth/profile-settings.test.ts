@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createClient } from "@/lib/supabase/server";
 
 import { getCurrentUser } from "./current-user";
+import { getProfileSettingsUser } from "./profile-settings";
 
 vi.mock("server-only", () => ({}), { virtual: true });
 
@@ -30,31 +31,31 @@ type ProfileResult = {
   error: Error | null;
 };
 
-const activeManagerProfile: ProfileRow = {
-  id: "manager-user-id",
+const activeManager: ProfileRow = {
+  id: "manager-id",
   display_name: "Arjun Rao",
   job_title: "Regional Sales Manager",
   role: "manager",
   team_id: "team-id",
   status: "active",
   organization_id: "organization-id",
-  is_organization_admin: true,
+  is_organization_admin: false,
 };
 
-const activeSalesExecutiveProfile: ProfileRow = {
-  id: "sales-user-id",
-  display_name: "Maya Chen",
-  job_title: null,
-  role: "sales_executive",
-  team_id: "team-id",
+const activeTeamlessOrganizationAdmin: ProfileRow = {
+  id: "organization-admin-id",
+  display_name: "Priya Admin",
+  job_title: "Operations Lead",
+  role: "manager",
+  team_id: null,
   status: "active",
   organization_id: "organization-id",
-  is_organization_admin: false,
+  is_organization_admin: true,
 };
 
 const createClientMock = vi.mocked(createClient);
 
-function withProfile(profile: ProfileRow | null, userId = "manager-user-id") {
+function withProfile(profile: ProfileRow | null, userId = "manager-id") {
   const claimsResult: ClaimsResult = {
     data: { claims: { sub: userId } },
     error: null,
@@ -81,81 +82,78 @@ function withProfile(profile: ProfileRow | null, userId = "manager-user-id") {
   return { eq, select };
 }
 
-describe("getCurrentUser", () => {
+describe("getProfileSettingsUser", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("resolves an active Manager with organization and team assignment", async () => {
-    const { eq, select } = withProfile(activeManagerProfile);
+  it("resolves an active normal workspace user", async () => {
+    const { eq, select } = withProfile(activeManager);
 
-    await expect(getCurrentUser()).resolves.toEqual({
-      id: "manager-user-id",
+    await expect(getProfileSettingsUser()).resolves.toEqual({
+      id: "manager-id",
       displayName: "Arjun Rao",
       jobTitle: "Regional Sales Manager",
       role: "manager",
       teamId: "team-id",
-      isOrganizationAdmin: true,
+      organizationId: "organization-id",
+      isOrganizationAdmin: false,
     });
     expect(select).toHaveBeenCalledWith(
       "id, display_name, job_title, role, team_id, status, organization_id, is_organization_admin",
     );
-    expect(eq).toHaveBeenCalledWith("id", "manager-user-id");
+    expect(eq).toHaveBeenCalledWith("id", "manager-id");
   });
 
-  it("resolves an active Sales Executive without weakening role behavior", async () => {
-    withProfile(activeSalesExecutiveProfile, "sales-user-id");
+  it("resolves a teamless active Organization Admin for profile settings", async () => {
+    withProfile(activeTeamlessOrganizationAdmin, "organization-admin-id");
 
-    await expect(getCurrentUser()).resolves.toEqual({
-      id: "sales-user-id",
-      displayName: "Maya Chen",
-      jobTitle: null,
-      role: "sales_executive",
-      teamId: "team-id",
-      isOrganizationAdmin: false,
+    await expect(getProfileSettingsUser()).resolves.toEqual({
+      id: "organization-admin-id",
+      displayName: "Priya Admin",
+      jobTitle: "Operations Lead",
+      role: "manager",
+      teamId: null,
+      organizationId: "organization-id",
+      isOrganizationAdmin: true,
     });
   });
 
   it("denies invited users", async () => {
     withProfile({
-      ...activeSalesExecutiveProfile,
+      ...activeManager,
       status: "invited",
-      organization_id: null,
-      team_id: null,
     });
 
-    await expect(getCurrentUser()).resolves.toBeNull();
+    await expect(getProfileSettingsUser()).resolves.toBeNull();
   });
 
   it("denies disabled users", async () => {
     withProfile({
-      ...activeSalesExecutiveProfile,
+      ...activeManager,
       status: "disabled",
     });
 
-    await expect(getCurrentUser()).resolves.toBeNull();
+    await expect(getProfileSettingsUser()).resolves.toBeNull();
   });
 
   it("denies users without a matching profile", async () => {
     withProfile(null);
 
-    await expect(getCurrentUser()).resolves.toBeNull();
+    await expect(getProfileSettingsUser()).resolves.toBeNull();
   });
 
-  it("denies active users without normal workspace assignment", async () => {
+  it("denies users without organization membership", async () => {
     withProfile({
-      ...activeManagerProfile,
-      team_id: null,
-    });
-
-    await expect(getCurrentUser()).resolves.toBeNull();
-  });
-
-  it("denies active users without organization membership", async () => {
-    withProfile({
-      ...activeManagerProfile,
+      ...activeManager,
       organization_id: null,
     });
+
+    await expect(getProfileSettingsUser()).resolves.toBeNull();
+  });
+
+  it("does not weaken existing normal current-user team requirements", async () => {
+    withProfile(activeTeamlessOrganizationAdmin, "organization-admin-id");
 
     await expect(getCurrentUser()).resolves.toBeNull();
   });

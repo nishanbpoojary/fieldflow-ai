@@ -10,12 +10,14 @@ import type {
 interface TeamPerformanceWorkspaceProps {
   context: TeamPerformancePageContext;
   displayName: string;
+  jobTitle?: string | null;
   result: TeamPerformanceResult;
 }
 
 export function TeamPerformanceWorkspace({
   context,
   displayName,
+  jobTitle,
   result,
 }: TeamPerformanceWorkspaceProps) {
   const periodLabel =
@@ -26,6 +28,7 @@ export function TeamPerformanceWorkspace({
       <AppSidebar
         role={context.role}
         displayName={displayName}
+        jobTitle={jobTitle}
         activeItem="team-performance"
         isOrganizationAdmin={context.isOrganizationAdmin}
       />
@@ -84,15 +87,18 @@ export function TeamPerformanceWorkspace({
 export function TeamPerformanceAccessDenied({
   context,
   displayName,
+  jobTitle,
 }: {
   context: TeamPerformancePageContext;
   displayName: string;
+  jobTitle?: string | null;
 }) {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-950 lg:flex">
       <AppSidebar
         role={context.role}
         displayName={displayName}
+        jobTitle={jobTitle}
         isOrganizationAdmin={context.isOrganizationAdmin}
       />
 

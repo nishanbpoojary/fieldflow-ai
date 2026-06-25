@@ -11,6 +11,7 @@ type CurrentUserProfileStatus = Database["public"]["Enums"]["profile_status"];
 export interface CurrentUser {
   id: string;
   displayName: string;
+  jobTitle: string | null;
   role: CurrentUserRole;
   teamId: string;
   isOrganizationAdmin: boolean;
@@ -39,7 +40,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
   const { data: profile, error: profileError } = await supabase
     .from("profiles")
     .select(
-      "id, display_name, role, team_id, status, organization_id, is_organization_admin",
+      "id, display_name, job_title, role, team_id, status, organization_id, is_organization_admin",
     )
     .eq("id", userId)
     .maybeSingle();
@@ -59,6 +60,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
   return {
     id: profile.id,
     displayName: profile.display_name,
+    jobTitle: profile.job_title,
     role: profile.role,
     teamId: profile.team_id,
     isOrganizationAdmin: profile.is_organization_admin,

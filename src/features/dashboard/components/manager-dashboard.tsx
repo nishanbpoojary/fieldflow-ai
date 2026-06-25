@@ -10,6 +10,7 @@ import type { ManagerDashboardResult } from "@/features/dashboard/types";
 
 interface ManagerDashboardProps {
   displayName: string;
+  jobTitle?: string | null;
   isOrganizationAdmin?: boolean;
   result: ManagerDashboardResult;
 }
@@ -55,6 +56,7 @@ function DashboardState({ status }: { status: "empty" | "unavailable" }) {
 
 export function ManagerDashboard({
   displayName,
+  jobTitle,
   isOrganizationAdmin = false,
   result,
 }: ManagerDashboardProps) {
@@ -70,6 +72,7 @@ export function ManagerDashboard({
       <AppSidebar
         role="manager"
         displayName={displayName}
+        jobTitle={jobTitle}
         isOrganizationAdmin={isOrganizationAdmin}
       />
 

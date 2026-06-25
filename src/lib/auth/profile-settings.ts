@@ -5,33 +5,30 @@ import { redirect } from "next/navigation";
 import type { Database } from "@/lib/supabase/database.types";
 import { createClient } from "@/lib/supabase/server";
 
-export type OrganizationAdminRole = Database["public"]["Enums"]["app_role"];
-type OrganizationAdminProfileStatus =
-  Database["public"]["Enums"]["profile_status"];
+export type ProfileSettingsRole = Database["public"]["Enums"]["app_role"];
+type ProfileSettingsStatus = Database["public"]["Enums"]["profile_status"];
 
-export interface OrganizationAdminContext {
+export interface ProfileSettingsUser {
   id: string;
   displayName: string;
   jobTitle: string | null;
-  organizationId: string;
-  role: OrganizationAdminRole;
+  role: ProfileSettingsRole;
   teamId: string | null;
-  isOrganizationAdmin: true;
+  organizationId: string;
+  isOrganizationAdmin: boolean;
 }
 
-function isOrganizationAdminRole(
-  role: string,
-): role is OrganizationAdminRole {
+function isProfileSettingsRole(role: string): role is ProfileSettingsRole {
   return role === "manager" || role === "sales_executive";
 }
 
 function isActiveProfileStatus(
-  status: OrganizationAdminProfileStatus,
+  status: ProfileSettingsStatus,
 ): status is "active" {
   return status === "active";
 }
 
-export async function getOrganizationAdmin(): Promise<OrganizationAdminContext | null> {
+export async function getProfileSettingsUser(): Promise<ProfileSettingsUser | null> {
   const supabase = await createClient();
   const { data: claimsData, error: claimsError } =
     await supabase.auth.getClaims();
@@ -55,8 +52,8 @@ export async function getOrganizationAdmin(): Promise<OrganizationAdminContext |
     profile.id !== userId ||
     !isActiveProfileStatus(profile.status) ||
     !profile.organization_id ||
-    profile.is_organization_admin !== true ||
-    !isOrganizationAdminRole(profile.role)
+    !isProfileSettingsRole(profile.role) ||
+    (!profile.team_id && profile.is_organization_admin !== true)
   ) {
     return null;
   }
@@ -65,19 +62,19 @@ export async function getOrganizationAdmin(): Promise<OrganizationAdminContext |
     id: profile.id,
     displayName: profile.display_name,
     jobTitle: profile.job_title,
-    organizationId: profile.organization_id,
     role: profile.role,
     teamId: profile.team_id,
-    isOrganizationAdmin: true,
+    organizationId: profile.organization_id,
+    isOrganizationAdmin: profile.is_organization_admin,
   };
 }
 
-export async function requireOrganizationAdmin(): Promise<OrganizationAdminContext> {
-  const organizationAdmin = await getOrganizationAdmin();
+export async function requireProfileSettingsUser(): Promise<ProfileSettingsUser> {
+  const profileSettingsUser = await getProfileSettingsUser();
 
-  if (!organizationAdmin) {
+  if (!profileSettingsUser) {
     redirect("/login");
   }
 
-  return organizationAdmin;
+  return profileSettingsUser;
 }

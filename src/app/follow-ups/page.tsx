@@ -15,6 +15,7 @@ export default async function FollowUpsPage() {
         isOrganizationAdmin: currentUser.isOrganizationAdmin,
       }}
       displayName={currentUser.displayName}
+      jobTitle={currentUser.jobTitle}
       result={result}
     />
   );

@@ -15,6 +15,7 @@ export default async function VisitsPage() {
         isOrganizationAdmin: currentUser.isOrganizationAdmin,
       }}
       displayName={currentUser.displayName}
+      jobTitle={currentUser.jobTitle}
       result={result}
     />
   );

@@ -9,6 +9,7 @@ import type {
 interface VisitPageShellProps {
   context: VisitPageContext;
   displayName: string;
+  jobTitle?: string | null;
   result: VisitWorkspaceResult;
 }
 
@@ -25,6 +26,7 @@ function formatOverviewDate(date: string) {
 export function VisitPageShell({
   context,
   displayName,
+  jobTitle,
   result,
 }: VisitPageShellProps) {
   const isManager = context.role === "manager";
@@ -34,6 +36,7 @@ export function VisitPageShell({
       <AppSidebar
         role={context.role}
         displayName={displayName}
+        jobTitle={jobTitle}
         activeItem="visits"
         isOrganizationAdmin={context.isOrganizationAdmin}
       />

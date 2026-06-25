@@ -33,15 +33,19 @@ vi.mock("@/features/dashboard/data/manager-insights", () => ({
 const managerUser: CurrentUser = {
   id: "manager-user-id",
   displayName: "Arjun Rao",
+  jobTitle: null,
   role: "manager",
   teamId: "server-team-id",
+  isOrganizationAdmin: false,
 };
 
 const salesExecutiveUser: CurrentUser = {
   id: "sales-user-id",
   displayName: "Maya Chen",
+  jobTitle: null,
   role: "sales_executive",
   teamId: "server-team-id",
+  isOrganizationAdmin: false,
 };
 
 const dashboardData: ManagerDashboardData = {

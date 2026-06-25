@@ -13,6 +13,7 @@ export default async function Home() {
     return (
       <SalesExecutiveDashboard
         displayName={currentUser.displayName}
+        jobTitle={currentUser.jobTitle}
         isOrganizationAdmin={currentUser.isOrganizationAdmin}
         result={dashboardResult}
       />
@@ -24,6 +25,7 @@ export default async function Home() {
   return (
     <ManagerDashboard
       displayName={currentUser.displayName}
+      jobTitle={currentUser.jobTitle}
       isOrganizationAdmin={currentUser.isOrganizationAdmin}
       result={dashboardResult}
     />

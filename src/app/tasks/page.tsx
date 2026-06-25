@@ -16,6 +16,7 @@ export default async function TasksPage() {
     <TaskPageShell
       context={context}
       displayName={currentUser.displayName}
+      jobTitle={currentUser.jobTitle}
       result={result}
     />
   );
