@@ -6,6 +6,7 @@ import type { Database } from "@/lib/supabase/database.types";
 import { createClient } from "@/lib/supabase/server";
 
 export type CurrentUserRole = Database["public"]["Enums"]["app_role"];
+type CurrentUserProfileStatus = Database["public"]["Enums"]["profile_status"];
 
 export interface CurrentUser {
   id: string;
@@ -16,6 +17,12 @@ export interface CurrentUser {
 
 function isCurrentUserRole(role: string): role is CurrentUserRole {
   return role === "manager" || role === "sales_executive";
+}
+
+function isActiveProfileStatus(
+  status: CurrentUserProfileStatus,
+): status is "active" {
+  return status === "active";
 }
 
 export async function getCurrentUser(): Promise<CurrentUser | null> {
@@ -30,7 +37,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
 
   const { data: profile, error: profileError } = await supabase
     .from("profiles")
-    .select("id, display_name, role, team_id")
+    .select("id, display_name, role, team_id, status, organization_id")
     .eq("id", userId)
     .maybeSingle();
 
@@ -38,6 +45,8 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
     profileError ||
     !profile ||
     profile.id !== userId ||
+    !isActiveProfileStatus(profile.status) ||
+    !profile.organization_id ||
     !profile.team_id ||
     !isCurrentUserRole(profile.role)
   ) {
