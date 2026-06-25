@@ -319,6 +319,7 @@ export type Database = {
           display_name: string
           id: string
           is_organization_admin: boolean
+          job_title: string | null
           organization_id: string | null
           role: Database["public"]["Enums"]["app_role"]
           status: Database["public"]["Enums"]["profile_status"]
@@ -330,6 +331,7 @@ export type Database = {
           display_name: string
           id: string
           is_organization_admin?: boolean
+          job_title?: string | null
           organization_id?: string | null
           role?: Database["public"]["Enums"]["app_role"]
           status?: Database["public"]["Enums"]["profile_status"]
@@ -341,6 +343,7 @@ export type Database = {
           display_name?: string
           id?: string
           is_organization_admin?: boolean
+          job_title?: string | null
           organization_id?: string | null
           role?: Database["public"]["Enums"]["app_role"]
           status?: Database["public"]["Enums"]["profile_status"]
@@ -757,6 +760,14 @@ export type Database = {
         Returns: Database["public"]["Enums"]["app_role"]
       }
       current_user_team_id: { Args: never; Returns: string }
+      update_own_profile: {
+        Args: { p_display_name: string; p_job_title?: string }
+        Returns: {
+          display_name: string
+          job_title: string
+          updated_at: string
+        }[]
+      }
     }
     Enums: {
       app_role: "manager" | "sales_executive"
