@@ -901,6 +901,101 @@ export type Database = {
         Returns: Database["public"]["Enums"]["app_role"]
       }
       current_user_team_id: { Args: never; Returns: string }
+      expire_organization_invitation: {
+        Args: { p_actor_profile_id: string; p_invitation_id: string }
+        Returns: {
+          expires_at: string
+          invitation_id: string
+          invitation_status: Database["public"]["Enums"]["organization_invitation_status"]
+          last_sent_at: string
+          newly_created: boolean
+          outcome: string
+          resend_count: number
+        }[]
+      }
+      mark_organization_invitation_send_failed: {
+        Args: { p_actor_profile_id: string; p_invitation_id: string }
+        Returns: {
+          expires_at: string
+          invitation_id: string
+          invitation_status: Database["public"]["Enums"]["organization_invitation_status"]
+          last_sent_at: string
+          newly_created: boolean
+          outcome: string
+          resend_count: number
+        }[]
+      }
+      mark_organization_invitation_sent: {
+        Args: { p_actor_profile_id: string; p_invitation_id: string }
+        Returns: {
+          expires_at: string
+          invitation_id: string
+          invitation_status: Database["public"]["Enums"]["organization_invitation_status"]
+          last_sent_at: string
+          newly_created: boolean
+          outcome: string
+          resend_count: number
+        }[]
+      }
+      record_organization_invitation_resend_failure: {
+        Args: { p_actor_profile_id: string; p_invitation_id: string }
+        Returns: {
+          expires_at: string
+          invitation_id: string
+          invitation_status: Database["public"]["Enums"]["organization_invitation_status"]
+          last_sent_at: string
+          newly_created: boolean
+          outcome: string
+          resend_count: number
+        }[]
+      }
+      record_organization_invitation_resend_success: {
+        Args: {
+          p_actor_profile_id: string
+          p_expected_prior_last_sent_at: string
+          p_invitation_id: string
+        }
+        Returns: {
+          expires_at: string
+          invitation_id: string
+          invitation_status: Database["public"]["Enums"]["organization_invitation_status"]
+          last_sent_at: string
+          newly_created: boolean
+          outcome: string
+          resend_count: number
+        }[]
+      }
+      reserve_organization_invitation: {
+        Args: {
+          p_actor_profile_id: string
+          p_expires_at?: string
+          p_invited_email: string
+          p_job_title?: string
+          p_target_role: Database["public"]["Enums"]["app_role"]
+          p_target_team_id: string
+        }
+        Returns: {
+          expires_at: string
+          invitation_id: string
+          invitation_status: Database["public"]["Enums"]["organization_invitation_status"]
+          last_sent_at: string
+          newly_created: boolean
+          outcome: string
+          resend_count: number
+        }[]
+      }
+      revoke_organization_invitation: {
+        Args: { p_actor_profile_id: string; p_invitation_id: string }
+        Returns: {
+          expires_at: string
+          invitation_id: string
+          invitation_status: Database["public"]["Enums"]["organization_invitation_status"]
+          last_sent_at: string
+          newly_created: boolean
+          outcome: string
+          resend_count: number
+        }[]
+      }
       update_own_profile: {
         Args: { p_display_name: string; p_job_title?: string }
         Returns: {
