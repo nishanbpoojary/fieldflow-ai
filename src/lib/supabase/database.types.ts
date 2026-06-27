@@ -819,6 +819,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      accept_organization_invitation: {
+        Args: { p_display_name: string; p_recipient_profile_id: string }
+        Returns: {
+          activated: boolean
+          app_role: Database["public"]["Enums"]["app_role"]
+          outcome: string
+          profile_id: string
+        }[]
+      }
       complete_assigned_follow_up: {
         Args: { p_completion_note: string; p_follow_up_id: string }
         Returns: {
