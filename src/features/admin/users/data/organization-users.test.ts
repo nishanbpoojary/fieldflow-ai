@@ -187,6 +187,9 @@ describe("organization users directory data", () => {
     });
 
     expect(directory.organizationName).toBe("FieldFlow Demo Motors");
+    expect(directory.inviteTeams).toEqual([
+      { id: "team-id", name: "Field Team" },
+    ]);
     expect(directory.summary).toEqual({
       totalUsers: 3,
       activeUsers: 2,

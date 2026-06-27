@@ -1,6 +1,7 @@
 import { AppSidebar } from "@/features/dashboard/components/app-sidebar";
 import type { OrganizationAdminContext } from "@/lib/auth/organization-admin";
 
+import { InviteUserForm } from "@/features/admin/invitations/components/invite-user-form";
 import type {
   OrganizationUserRecord,
   OrganizationUsersDirectoryData,
@@ -104,6 +105,8 @@ function OrganizationUsersContent({
           </p>
         </div>
       </section>
+
+      <InviteUserForm teams={data.inviteTeams} />
 
       <section aria-labelledby="organization-user-summary-title">
         <div className="mb-4">
