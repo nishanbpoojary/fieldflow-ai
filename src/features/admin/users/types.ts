@@ -9,6 +9,11 @@ export interface OrganizationUserTeamRow {
   name: string;
 }
 
+export interface OrganizationInviteTeamOption {
+  id: string;
+  name: string;
+}
+
 export interface OrganizationUserProfileRow {
   display_name: string;
   role: OrganizationUserRole;
@@ -36,6 +41,7 @@ export interface OrganizationUsersSummary {
 
 export interface OrganizationUsersDirectoryData {
   organizationName: string;
+  inviteTeams: OrganizationInviteTeamOption[];
   summary: OrganizationUsersSummary;
   users: OrganizationUserRecord[];
 }

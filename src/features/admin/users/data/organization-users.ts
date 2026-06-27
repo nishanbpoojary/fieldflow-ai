@@ -72,6 +72,7 @@ export function mapOrganizationUsersDirectory({
 
   return {
     organizationName: organization.name,
+    inviteTeams: teams.map((team) => ({ id: team.id, name: team.name })),
     summary: {
       totalUsers: users.length,
       activeUsers: users.filter((user) => user.status === "active").length,
